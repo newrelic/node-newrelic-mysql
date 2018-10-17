@@ -1,0 +1,15 @@
+{
+  "env": {
+    "es6": true,
+    "mocha": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6
+  },
+  "rules": {
+    "max-nested-callbacks": "off",
+    "func-names": "off",
+    "no-shadow": ["warn", {"allow": ["cb", "t", "shim", "error", "err"]}],
+    "brace-style": ["error", "1tbs", {"allowSingleLine": true}]
+  }
+}

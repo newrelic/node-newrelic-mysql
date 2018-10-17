@@ -25,4 +25,6 @@ matrix:
       env: SUITE=lint
     - node_js: "9"
       env: SUITE=lint
+services:
+  - mysql
 script: npm run $SUITE
