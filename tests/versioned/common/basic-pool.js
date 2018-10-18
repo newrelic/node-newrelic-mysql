@@ -2,11 +2,11 @@
 
 const exec = require('child_process').exec
 const fs = require('fs')
-const params = require('../../lib/params')
 const setup = require('./setup')
 const urltils = require('newrelic/lib/util/urltils') // TODO: Expose via test utilities
 const utils = require('@newrelic/test-utilities')
 
+const params = setup.params
 const DBUSER = 'root'
 const DBNAME = 'agent_integration'
 

@@ -1,11 +1,14 @@
 'use strict'
 
 const async = require('async')
-const params = require('../../lib/params')
 
 
 module.exports = exports = setup
 exports.pool = setupPool
+const params = exports.params = {
+  mysql_host: process.env.NR_NODE_TEST_MYSQL_HOST || 'localhost',
+  mysql_port: process.env.NR_NODE_TEST_MYSQL_PORT || 3306
+}
 
 function setup(mysql, cb) {
   async.series([

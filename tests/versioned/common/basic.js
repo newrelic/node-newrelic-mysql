@@ -3,10 +3,12 @@
 process.env.NEW_RELIC_HOME = __dirname
 
 const logger = require('newrelic/lib/logger')
-const params = require('../../lib/params')
 const setup = require('./setup')
 const urltils = require('newrelic/lib/util/urltils') // TODO: Expose via test utilities
 const utils = require('@newrelic/test-utilities')
+
+
+const params = setup.params
 
 
 module.exports = (t, requireMySQL) => {
