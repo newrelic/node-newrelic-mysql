@@ -29,7 +29,7 @@
     "@newrelic/test-utilities": "^1.2.1",
     "async": "^2.6.1",
     "eslint": "^5.7.0",
-    "generic-pool": "^3.4.2",
+    "generic-pool": "^2.5.4",
     "mysql": "^2.16.0",
     "mysql2": "^1.6.1",
     "newrelic": "^4.9.0",
