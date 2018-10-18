@@ -274,7 +274,9 @@ module.exports = (t, requireMySQL) => {
     t.test('lack of callback does not explode', (t) => {
       helper.runInTransaction((txn) => {
         pool.query('SET SESSION auto_increment_increment=1')
-        txn.end(t.end)
+        setTimeout(() => {
+          txn.end(t.end)
+        }, 100)
       })
     })
 
