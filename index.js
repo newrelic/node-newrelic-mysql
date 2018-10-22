@@ -8,6 +8,6 @@
 const newrelic = require('newrelic')
 const instrumentation = require('./lib/instrumentation')
 
-newrelic.instrumentWebframework('mysql', instrumentation.callbackInitialize)
-newrelic.instrumentWebframework('mysql2', instrumentation.callbackInitialize)
-newrelic.instrumentWebframework('mysql2/promise', instrumentation.promiseInitialize)
+newrelic.instrumentDatastore('mysql', instrumentation.callbackInitialize)
+newrelic.instrumentDatastore('mysql2', instrumentation.callbackInitialize)
+newrelic.instrumentDatastore('mysql2/promise', instrumentation.promiseInitialize)
