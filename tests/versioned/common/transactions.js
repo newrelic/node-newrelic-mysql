@@ -15,11 +15,6 @@ module.exports = (t, requireMySQL) => {
 
     // set up the instrumentation before loading MySQL
     const helper = utils.TestAgent.makeInstrumented()
-    helper.registerInstrumentation({
-      moduleName: 'mysql',
-      type: 'datastore',
-      onRequire: require('../../../lib/instrumentation').callbackInitialize
-    })
     const mysql = requireMySQL(helper)
 
     t.tearDown(() => helper.unload())
