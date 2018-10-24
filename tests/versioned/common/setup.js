@@ -6,8 +6,10 @@ const async = require('async')
 module.exports = exports = setup
 exports.pool = setupPool
 const params = exports.params = {
-  mysql_host: process.env.NR_NODE_TEST_MYSQL_HOST || 'localhost',
-  mysql_port: process.env.NR_NODE_TEST_MYSQL_PORT || 3306
+  host: process.env.NR_NODE_TEST_MYSQL_HOST || 'localhost',
+  port: process.env.NR_NODE_TEST_MYSQL_PORT || 3306,
+  user: 'test_user',
+  database: 'agent_integration_' + Math.floor(Math.random() * 1000)
 }
 
 function setup(mysql, cb) {
@@ -22,9 +24,9 @@ function setup(mysql, cb) {
       })
 
       async.eachSeries([
-        'CREATE USER test_user',
-        'GRANT ALL ON *.* TO `test_user`',
-        'CREATE DATABASE IF NOT EXISTS `agent_integration`'
+        `CREATE USER ${params.user}`,
+        `GRANT ALL ON *.* TO ${params.user}`,
+        `CREATE DATABASE IF NOT EXISTS ${params.database}`
       ], (sql, cb) => {
         client.query(sql, (err) => {
           // Travis uses MySQL 5.4 which does not support `IF NOT EXISTS` for
@@ -45,12 +47,7 @@ function setup(mysql, cb) {
 
     // 2. Create the table and data as test user.
     (cb) => {
-      var client = mysql.createConnection({
-        host: params.mysql_host,
-        port: params.mysql_port,
-        user: 'test_user',
-        database: 'agent_integration'
-      })
+      var client = mysql.createConnection(params)
 
       async.eachSeries([
         [
@@ -83,12 +80,7 @@ function setupPool(mysql, logger) {
     log: (message) => logger.info(message),
 
     create: (callback) => {
-      var client = mysql.createConnection({
-        user: 'test_user',
-        database: 'agent_integration',
-        host: params.mysql_host,
-        port: params.mysql_port
-      })
+      var client = mysql.createConnection(params)
 
       client.on('error', (err) => {
         logger.error('MySQL connection errored out, destroying connection')

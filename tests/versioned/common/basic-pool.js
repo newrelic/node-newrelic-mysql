@@ -7,17 +7,15 @@ const urltils = require('newrelic/lib/util/urltils') // TODO: Expose via test ut
 const utils = require('@newrelic/test-utilities')
 
 const params = setup.params
-const DBUSER = 'root'
-const DBNAME = 'agent_integration'
 
 var config = getConfig({})
 function getConfig(extras) {
   var conf = {
     connectionLimit: 10,
-    host: params.mysql_host,
-    port: params.mysql_port,
-    user: DBUSER,
-    database: DBNAME
+    host: params.host,
+    port: params.port,
+    user: params.user,
+    database: params.database
   }
 
   for (var key in extras) { // eslint-disable-line guard-for-in
@@ -43,8 +41,8 @@ module.exports = (t, requireMySQL) => {
     var badConfig = {
       connectionLimit: 10,
       host: 'nohost',
-      user: DBUSER,
-      database: DBNAME
+      user: params.user,
+      database: params.database
     }
 
     t.tearDown(() => {
@@ -129,7 +127,7 @@ module.exports = (t, requireMySQL) => {
           )
           t.equal(
             seg.parameters.database_name,
-            DBNAME,
+            params.database,
             'set database name'
           )
           t.equal(
@@ -160,7 +158,7 @@ module.exports = (t, requireMySQL) => {
           )
           t.equal(
             seg.parameters.database_name,
-            DBNAME,
+            params.database,
             'should set database name'
           )
           helper.agent.config.datastore_tracer.instance_reporting.enabled = true
@@ -219,7 +217,7 @@ module.exports = (t, requireMySQL) => {
           )
           t.equal(
             seg.parameters.database_name,
-            DBNAME,
+            params.database,
             'set database name'
           )
           t.equal(seg.parameters.port_path_or_id, String(defaultConfig.port), 'set port')
@@ -248,7 +246,7 @@ module.exports = (t, requireMySQL) => {
           )
           t.equal(
             seg.parameters.database_name,
-            DBNAME,
+            params.database,
             'should set database name'
           )
           t.equal(
@@ -381,7 +379,7 @@ module.exports = (t, requireMySQL) => {
               )
               t.equal(
                 seg.parameters.database_name,
-                DBNAME,
+                params.database,
                 'set database name'
               )
               txn.end(socketPool.end.bind(socketPool, t.end))

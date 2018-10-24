@@ -6,8 +6,6 @@ const urltils = require('newrelic/lib/util/urltils') // TODO: Expose via test ut
 const utils = require('@newrelic/test-utilities')
 
 const params = setup.params
-const DBUSER = 'test_user'
-const DBNAME = 'agent_integration'
 
 
 utils(tap)
@@ -42,12 +40,7 @@ tap.test('mysql2 promises', {timeout: 30000}, (t) => {
       if (err) {
         done(err)
       } else {
-        mysql.createConnection({
-          user: DBUSER,
-          databsae: DBNAME,
-          host: params.mysql_host,
-          port: params.mysql_port
-        }).then((c) => {client = c; done()}, done)
+        mysql.createConnection(params).then((c) => {client = c; done()}, done)
       }
     })
   })
@@ -128,7 +121,7 @@ function endAsync(tx) {
 }
 
 function getHostName(helper) {
-  return urltils.isLocalhost(params.mysql_host)
+  return urltils.isLocalhost(params.host)
     ? helper.agent.config.getHostnameSafe()
-    : params.mysql_host
+    : params.host
 }

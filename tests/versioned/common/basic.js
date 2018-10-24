@@ -177,9 +177,9 @@ module.exports = (t, requireMySQL) => {
                 t.ok(seg, 'there is a segment')
                 t.equal(
                   seg.parameters.host,
-                  urltils.isLocalhost(params.mysql_host)
+                  urltils.isLocalhost(params.host)
                     ? helper.agent.config.getHostnameSafe()
-                    : params.mysql_host,
+                    : params.host,
                   'set host'
                 )
                 t.equal(
