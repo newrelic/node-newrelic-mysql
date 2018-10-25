@@ -157,7 +157,7 @@ module.exports = (t, requireMySQL) => {
       })
     })
 
-    t.test('ensure database name changes with a use statement', (t) => {
+    t.test('database name should change with use statement', (t) => {
       helper.runInTransaction((txn) => {
         withRetry.getClient((err, client) => {
           if (!t.error(err)) {
@@ -177,9 +177,9 @@ module.exports = (t, requireMySQL) => {
                 t.ok(seg, 'there is a segment')
                 t.equal(
                   seg.parameters.host,
-                  urltils.isLocalhost(params.mysql_host)
+                  urltils.isLocalhost(params.host)
                     ? helper.agent.config.getHostnameSafe()
-                    : params.mysql_host,
+                    : params.host,
                   'set host'
                 )
                 t.equal(
@@ -349,46 +349,6 @@ module.exports = (t, requireMySQL) => {
             txn.end(() => {
               checkQueries(t, helper)
               t.end()
-            })
-          })
-        })
-      })
-    })
-
-    t.test('ensure database name changes with a use statement', (t) => {
-      helper.runInTransaction((txn) => {
-        withRetry.getClient((err, client) => {
-          client.query('create database if not exists test_db;', (err) => {
-            t.error(err)
-            client.query('use test_db;', (err) => {
-              t.error(err)
-              client.query('SELECT 1 + 1 AS solution', (err) => {
-                var seg = helper.agent.tracer.getSegment().parent
-                t.error(err)
-                if (t.ok(seg, 'should have a segment')) {
-                  t.equal(
-                    seg.parameters.host,
-                    urltils.isLocalhost(params.mysql_host)
-                      ? helper.agent.config.getHostnameSafe()
-                      : params.mysql_host,
-                    'should set host parameter'
-                  )
-                  t.equal(
-                    seg.parameters.database_name,
-                    'test_db',
-                    'should use new database name'
-                  )
-                  t.equal(
-                    seg.parameters.port_path_or_id,
-                    '3306',
-                    'should set port parameter'
-                  )
-                }
-                client.query('drop test_db;', () => {
-                  withRetry.release(client)
-                  txn.end(t.end)
-                })
-              })
             })
           })
         })

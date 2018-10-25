@@ -5,8 +5,6 @@ const utils = require('@newrelic/test-utilities')
 
 
 const params = setup.params
-const DBUSER = 'test_user'
-const DBNAME = 'agent_integration'
 
 
 module.exports = (t, requireMySQL) => {
@@ -15,11 +13,6 @@ module.exports = (t, requireMySQL) => {
 
     // set up the instrumentation before loading MySQL
     const helper = utils.TestAgent.makeInstrumented()
-    helper.registerInstrumentation({
-      moduleName: 'mysql',
-      type: 'datastore',
-      onRequire: require('../../../lib/instrumentation').callbackInitialize
-    })
     const mysql = requireMySQL(helper)
 
     t.tearDown(() => helper.unload())
@@ -27,12 +20,7 @@ module.exports = (t, requireMySQL) => {
     setup(mysql, function(error) {
       t.error(error)
 
-      const client = mysql.createConnection({
-        user: DBUSER,
-        database: DBNAME,
-        host: params.mysql_host,
-        port: params.mysql_port
-      })
+      const client = mysql.createConnection(params)
 
       t.tearDown(() => client.end())
 

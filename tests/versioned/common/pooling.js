@@ -5,10 +5,6 @@ const setup = require('./setup')
 const utils = require('@newrelic/test-utilities')
 
 
-const DBNAME = 'agent_integration'
-const DBTABLE = 'test'
-
-
 module.exports = (t, requireMySQL) => {
   t.test('MySQL instrumentation with a connection pool', {timeout: 30000}, (t) => {
     let helper = utils.TestAgent.makeInstrumented()
@@ -64,10 +60,7 @@ module.exports = (t, requireMySQL) => {
             return
           }
 
-          var query =
-            'SELECT *' +
-            '  FROM ' + DBNAME + '.' + DBTABLE +
-            ' WHERE id = ?'
+          var query = `SELECT * FROM ${setup.params.database}.test WHERE id = ?`
           client.query(query, [params.id], (err, results) => {
             withRetry.release(client) // always release back to the pool
 
@@ -104,22 +97,26 @@ module.exports = (t, requireMySQL) => {
               return
             }
 
-            t.equals(row.id, 1, 'node-mysql should still work (found id)')
-            t.equals(row.test_value, 'hamburgefontstiv',
-                     'mysql driver should still work (found value)')
+            t.equals(row.id, 1, 'mysql should still work (found id)')
+            t.equals(
+              row.test_value,
+              'hamburgefontstiv',
+              'mysql driver should still work (found value)'
+            )
 
             txn.end()
 
             var trace = txn.trace
             t.ok(trace, 'trace should exist')
             t.ok(trace.root, 'root element should exist.')
-            t.equals(trace.root.children.length, 1, 'There should be only one child.')
 
-            var selectSegment = trace.root.children[0]
+            t.ok(trace.root.children.length < 3, 'should have one or two children')
+
+            var selectSegment = trace.root.children[trace.root.children.length - 1]
             t.ok(selectSegment, 'trace segment for first SELECT should exist')
             t.equals(
               selectSegment.name,
-              'Datastore/statement/MySQL/agent_integration.test/select',
+              `Datastore/statement/MySQL/${setup.params.database}.test/select`,
               'should register as SELECT'
             )
 
