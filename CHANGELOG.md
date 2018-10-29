@@ -1,4 +1,8 @@
 
+### 1.0.1 (2018-10-30):
+
+* Updated test utilities library and stopped deep linking into the agent.
+
 ### 1.0.0 (2018-10-26):
 
 * Initial release of `mysql` and `mysql2` instrumentation as a separate module.

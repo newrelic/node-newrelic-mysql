@@ -3,7 +3,6 @@
 const exec = require('child_process').exec
 const fs = require('fs')
 const setup = require('./setup')
-const urltils = require('newrelic/lib/util/urltils') // TODO: Expose via test utilities
 const utils = require('@newrelic/test-utilities')
 
 const params = setup.params
@@ -120,9 +119,7 @@ module.exports = (t, requireMySQL) => {
           t.ok(seg, 'should have a segment (' + (seg && seg.name) + ')')
           t.equal(
             seg.parameters.host,
-            urltils.isLocalhost(config.host)
-              ? helper.agent.config.getHostnameSafe()
-              : config.host,
+            utils.getDelocalizedHostname(config.host),
             'set host'
           )
           t.equal(
@@ -176,9 +173,7 @@ module.exports = (t, requireMySQL) => {
           t.ok(seg, 'there is a segment')
           t.equal(
             seg.parameters.host,
-            urltils.isLocalhost(config.host)
-              ? helper.agent.config.getHostnameSafe()
-              : config.host,
+            utils.getDelocalizedHostname(config.host),
             'set host'
           )
           t.equal(
@@ -239,9 +234,7 @@ module.exports = (t, requireMySQL) => {
           t.ok(seg, 'should have a segment')
           t.equal(
             seg.parameters.host,
-            urltils.isLocalhost(config.host)
-              ? helper.agent.config.getHostnameSafe()
-              : config.host,
+            utils.getDelocalizedHostname(config.host),
             'should set host'
           )
           t.equal(
