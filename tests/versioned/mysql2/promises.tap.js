@@ -2,7 +2,6 @@
 
 const setup = require('../common/setup')
 const tap = require('tap')
-const urltils = require('newrelic/lib/util/urltils') // TODO: Expose via test utilities
 const utils = require('@newrelic/test-utilities')
 
 const params = setup.params
@@ -86,7 +85,11 @@ tap.test('mysql2 promises', {timeout: 30000}, (t) => {
 
         const segment = tx.trace.root.children[2]
         const parameters = segment.parameters
-        t.equal(parameters.host, getHostName(helper), 'should set host name')
+        t.equal(
+          parameters.host,
+          utils.getDelocalizedHostname(params.host),
+          'should set host name'
+        )
         t.equal(parameters.database_name, 'test_db', 'should follow use statement')
         t.equal(parameters.port_path_or_id, '3306', 'should set port')
 
@@ -118,10 +121,4 @@ function checkQueries(t, helper) {
 
 function endAsync(tx) {
   return new Promise((resolve) => tx.end(() => resolve()))
-}
-
-function getHostName(helper) {
-  return urltils.isLocalhost(params.host)
-    ? helper.agent.config.getHostnameSafe()
-    : params.host
 }
