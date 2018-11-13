@@ -1,2 +1,4 @@
 package-lock.json
+.eslint*
+*.log
 tests/versioned/*/node_modules
