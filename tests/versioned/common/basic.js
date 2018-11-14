@@ -2,7 +2,6 @@
 
 process.env.NEW_RELIC_HOME = __dirname
 
-const logger = require('newrelic/lib/logger')
 const setup = require('./setup')
 const utils = require('@newrelic/test-utilities')
 
@@ -14,7 +13,6 @@ module.exports = (t, requireMySQL) => {
   t.test('Basic run through mysql functionality', {timeout: 30 * 1000}, (t) => {
     t.autoend()
 
-    const poolLogger = logger.child({component: 'test-pool'})
     let helper = null
     let mysql = null
     let pool = null
@@ -23,7 +21,7 @@ module.exports = (t, requireMySQL) => {
       helper = utils.TestAgent.makeInstrumented()
       mysql = requireMySQL(helper)
       setup(mysql, done)
-      pool = setup.pool(mysql, poolLogger)
+      pool = setup.pool(mysql)
     })
 
     t.afterEach(function(done) {
@@ -47,8 +45,6 @@ module.exports = (t, requireMySQL) => {
 
         pool.acquire((err, client) => {
           if (err) {
-            poolLogger.error('Failed to get connection from the pool: %s', err)
-
             if (counter < 10) {
               pool.destroy(client)
               withRetry.getClient(callback, counter)

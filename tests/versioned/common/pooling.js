@@ -1,6 +1,5 @@
 'use strict'
 
-const logger = require('newrelic/lib/logger')
 const setup = require('./setup')
 const utils = require('@newrelic/test-utilities')
 
@@ -9,8 +8,7 @@ module.exports = (t, requireMySQL) => {
   t.test('MySQL instrumentation with a connection pool', {timeout: 30000}, (t) => {
     let helper = utils.TestAgent.makeInstrumented()
     let mysql = requireMySQL(helper)
-    let poolLogger = logger.child({component: 'pool'})
-    let pool = setup.pool(mysql, poolLogger)
+    let pool = setup.pool(mysql)
 
     t.tearDown(() => {
       pool.drain(() => {
@@ -28,8 +26,6 @@ module.exports = (t, requireMySQL) => {
 
         pool.acquire((err, client) => {
           if (err) {
-            poolLogger.error('Failed to get connection from the pool: %s', err)
-
             if (counter < 10) {
               pool.destroy(client)
               withRetry.getClient(callback, counter)
