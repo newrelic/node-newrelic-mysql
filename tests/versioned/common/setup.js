@@ -68,29 +68,28 @@ function setup(mysql, cb) {
   ], cb)
 }
 
-function setupPool(mysql, logger) {
+function setupPool(mysql) {
   var generic = require('generic-pool')
 
+  /* eslint-disable no-console */
   var pool = new generic.Pool({
     name: 'mysql',
     min: 2,
     max: 6,
     idleTimeoutMillis: 250,
 
-    log: (message) => logger.info(message),
-
     create: (callback) => {
       var client = mysql.createConnection(params)
 
       client.on('error', (err) => {
-        logger.error('MySQL connection errored out, destroying connection')
-        logger.error(err)
+        console.error('MySQL connection errored out, destroying connection')
+        console.error(err)
         pool.destroy(client)
       })
 
       client.connect((err) => {
         if (err) {
-          logger.error('MySQL client failed to connect. Does `agent_integration` exist?')
+          console.error('MySQL client failed to connect. Does `agent_integration` exist?')
         }
 
         callback(err, client)
@@ -98,10 +97,11 @@ function setupPool(mysql, logger) {
     },
 
     destroy: (client) => {
-      logger.info('Destroying MySQL connection')
+      console.info('Destroying MySQL connection')
       client.end()
     }
   })
+  /* eslint-enable no-console */
 
   return pool
 }
