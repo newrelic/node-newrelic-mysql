@@ -17,30 +17,34 @@ tap.test('mysql2 promises', {timeout: 30000}, (t) => {
   let client = null
 
   t.beforeEach((done) => {
-    helper = utils.TestAgent.makeInstrumented()
-
-    // Stub the normal mysql2 instrumentation to avoid it hiding issues with the
-    // promise instrumentation.
-    helper.registerInstrumentation({
-      moduleName: 'mysql2',
-      type: 'datastore',
-      onRequire: () => {}
-    })
-
-    helper.registerInstrumentation({
-      moduleName: 'mysql2/promise',
-      type: 'datastore',
-      onRequire: require('../../../lib/instrumentation').promiseInitialize
-    })
-    mysql = require('mysql2/promise')
-
     // Perform the setup using the callback API.
     setup(require('mysql2'), (err) => {
       if (err) {
         done(err)
-      } else {
-        mysql.createConnection(params).then((c) => {client = c; done()}, done)
       }
+
+      // It is important to keep this setup code inside the callback to trigger
+      // certain potential error cases with module resolution.
+
+      helper = utils.TestAgent.makeInstrumented()
+
+      // Stub the normal mysql2 instrumentation to avoid it hiding issues with the
+      // promise instrumentation.
+      helper.registerInstrumentation({
+        moduleName: 'mysql2',
+        type: 'datastore',
+        onRequire: () => {}
+      })
+
+      helper.registerInstrumentation({
+        moduleName: 'mysql2/promise',
+        type: 'datastore',
+        onRequire: require('../../../lib/instrumentation').promiseInitialize
+      })
+
+      mysql = require('mysql2/promise')
+
+      mysql.createConnection(params).then((c) => {client = c; done()}, done)
     })
   })
 
@@ -58,7 +62,7 @@ tap.test('mysql2 promises', {timeout: 30000}, (t) => {
     return helper.runInTransaction((tx) => {
       return client.query('SELECT 1').then(() => {
         t.transaction(tx)
-        return endAsync(tx)
+        tx.end()
       })
     }).then(() => checkQueries(t, helper))
   })
@@ -67,7 +71,7 @@ tap.test('mysql2 promises', {timeout: 30000}, (t) => {
     return helper.runInTransaction((tx) => {
       return client.query('SELECT 1', []).then(() => {
         t.transaction(tx)
-        return endAsync(tx)
+        tx.end()
       })
     }).then(() => checkQueries(t, helper))
   })
@@ -84,29 +88,29 @@ tap.test('mysql2 promises', {timeout: 30000}, (t) => {
         t.transaction(tx)
 
         const segment = tx.trace.root.children[2]
-        const parameters = segment.parameters
+        const attributes = segment.getAttributes()
         t.equal(
-          parameters.host,
+          attributes.host,
           utils.getDelocalizedHostname(params.host),
           'should set host name'
         )
-        t.equal(parameters.database_name, 'test_db', 'should follow use statement')
-        t.equal(parameters.port_path_or_id, '3306', 'should set port')
+        t.equal(attributes.database_name, 'test_db', 'should follow use statement')
+        t.equal(attributes.port_path_or_id, '3306', 'should set port')
 
-        return endAsync(tx)
+        tx.end()
       })
     }).then(() => checkQueries(t, helper))
   })
 
   t.test('query with options object rather than sql', (t) => {
     return helper.runInTransaction((tx) => {
-      return client.query({sql: 'SELECT 1'}).then(() => endAsync(tx))
+      return client.query({sql: 'SELECT 1'}).then(() => tx.end())
     }).then(() => checkQueries(t, helper))
   })
 
   t.test('query with options object and values', (t) => {
     return helper.runInTransaction((tx) => {
-      return client.query({sql: 'SELECT 1'}, []).then(() => endAsync(tx))
+      return client.query({sql: 'SELECT 1'}, []).then(() => tx.end())
     }).then(() => checkQueries(t, helper))
   })
 })
@@ -117,8 +121,4 @@ function checkQueries(t, helper) {
   for (let sample of querySamples.values()) {
     t.ok(sample.total > 0, 'the samples should have positive duration')
   }
-}
-
-function endAsync(tx) {
-  return new Promise((resolve) => tx.end(() => resolve()))
 }
