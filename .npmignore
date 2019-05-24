@@ -2,3 +2,7 @@ package-lock.json
 .eslint*
 *.log
 tests/versioned/*/node_modules
+
+# VS Code settings
+.vscode
+*.code-workspace
