@@ -33,10 +33,10 @@
     "generic-pool": "^2.5.4",
     "mysql": "^2.16.0",
     "mysql2": "^1.6.1",
-    "newrelic": "^5.9.0",
+    "newrelic": "^5.9.1",
     "tap": "^11.1.5"
   },
   "peerDependencies": {
-    "newrelic": ">=5.9.0"
+    "newrelic": ">=5.9.1"
   }
 }
