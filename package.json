@@ -25,6 +25,9 @@
     "url": "https://github.com/newrelic/node-newrelic-mysql/issues"
   },
   "homepage": "https://github.com/newrelic/node-newrelic-mysql#readme",
+  "engines": {
+    "node": ">=6.0.0 <11.0.0"
+  },
   "devDependencies": {
     "@newrelic/test-utilities": "^3.0.0",
     "async": "^2.6.1",
