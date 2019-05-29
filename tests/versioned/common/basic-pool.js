@@ -409,8 +409,10 @@ module.exports = (t, requireMySQL) => {
                 params.database,
                 'set database name'
               )
+
               txn.end()
-              socketPool.end.bind(socketPool, t.end)
+              socketPool.end()
+              t.end()
             })
           })
         }
