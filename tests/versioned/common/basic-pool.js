@@ -117,22 +117,26 @@ module.exports = (t, requireMySQL) => {
           }
           t.error(err, 'should not error')
           t.ok(seg, 'should have a segment (' + (seg && seg.name) + ')')
+
+          const attributes = seg.getAttributes()
+
           t.equal(
-            seg.parameters.host,
+            attributes.host,
             utils.getDelocalizedHostname(config.host),
             'set host'
           )
           t.equal(
-            seg.parameters.database_name,
+            attributes.database_name,
             params.database,
             'set database name'
           )
           t.equal(
-            seg.parameters.port_path_or_id,
+            attributes.port_path_or_id,
             String(config.port),
             'set port'
           )
-          txn.end(t.end)
+          txn.end()
+          t.end()
         })
       })
     })
@@ -145,21 +149,24 @@ module.exports = (t, requireMySQL) => {
           t.error(err, 'should not error making query')
           t.ok(seg, 'should have a segment')
 
+          const attributes = seg.getAttributes()
+
           t.notOk(
-            seg.parameters.host,
-            'should have no host parameter'
+            attributes.host,
+            'should have no host attribute'
           )
           t.notOk(
-            seg.parameters.port_path_or_id,
-            'should have no port parameter'
+            attributes.port_path_or_id,
+            'should have no port attribute'
           )
           t.equal(
-            seg.parameters.database_name,
+            attributes.database_name,
             params.database,
             'should set database name'
           )
           helper.agent.config.datastore_tracer.instance_reporting.enabled = true
-          txn.end(t.end)
+          txn.end()
+          t.end()
         })
       })
     })
@@ -171,22 +178,26 @@ module.exports = (t, requireMySQL) => {
           var seg = getDatastoreSegment(helper.agent.tracer.getSegment())
           t.notOk(err, 'no errors')
           t.ok(seg, 'there is a segment')
+
+          const attributes = seg.getAttributes()
+
           t.equal(
-            seg.parameters.host,
+            attributes.host,
             utils.getDelocalizedHostname(config.host),
             'set host'
           )
           t.equal(
-            seg.parameters.port_path_or_id,
+            attributes.port_path_or_id,
             String(config.port),
             'set port'
           )
           t.notOk(
-            seg.parameters.database_name,
-            'should have no database name parameter'
+            attributes.database_name,
+            'should have no database name attribute'
           )
           helper.agent.config.datastore_tracer.database_name_reporting.enabled = true
-          txn.end(t.end)
+          txn.end()
+          t.end()
         })
       })
     })
@@ -205,18 +216,25 @@ module.exports = (t, requireMySQL) => {
           // with the query.
           var seg = getDatastoreSegment(helper.agent.tracer.getSegment())
           t.ok(seg, 'there is a segment')
+
+          const attributes = seg.getAttributes()
+
           t.equal(
-            seg.parameters.host,
+            attributes.host,
             helper.agent.config.getHostnameSafe(),
             'set host'
           )
           t.equal(
-            seg.parameters.database_name,
+            attributes.database_name,
             params.database,
             'set database name'
           )
-          t.equal(seg.parameters.port_path_or_id, String(defaultConfig.port), 'set port')
-          txn.end(defaultPool.end.bind(defaultPool, t.end))
+          t.equal(attributes.port_path_or_id, String(defaultConfig.port), 'set port')
+          txn.end()
+
+          defaultPool.end((err) => {
+            t.end(err)
+          })
         })
       })
     })
@@ -232,22 +250,29 @@ module.exports = (t, requireMySQL) => {
 
           t.error(err, 'should not error making query')
           t.ok(seg, 'should have a segment')
+
+          const attributes = seg.getAttributes()
+
           t.equal(
-            seg.parameters.host,
+            attributes.host,
             utils.getDelocalizedHostname(config.host),
             'should set host'
           )
           t.equal(
-            seg.parameters.database_name,
+            attributes.database_name,
             params.database,
             'should set database name'
           )
           t.equal(
-            seg.parameters.port_path_or_id,
+            attributes.port_path_or_id,
             '3306',
             'should set port'
           )
-          txn.end(defaultPool.end.bind(defaultPool, t.end))
+          txn.end()
+
+          defaultPool.end((err) => {
+            t.end(err)
+          })
         })
       })
     })
@@ -257,7 +282,8 @@ module.exports = (t, requireMySQL) => {
         pool.query('BLARG', (err) => {
           t.ok(err, 'should have errored')
           t.transaction(txn)
-          txn.end(t.end)
+          txn.end()
+          t.end()
         })
       })
     })
@@ -266,7 +292,8 @@ module.exports = (t, requireMySQL) => {
       helper.runInTransaction((txn) => {
         pool.query('SET SESSION auto_increment_increment=1')
         setTimeout(() => {
-          txn.end(t.end)
+          txn.end()
+          t.end()
         }, 100)
       })
     })
@@ -279,7 +306,8 @@ module.exports = (t, requireMySQL) => {
           t.error(err, 'should not error')
           t.transaction(txn)
           checkSegment(t, segment, 'MySQL Pool#query')
-          txn.end(t.end)
+          txn.end()
+          t.end()
         })
       })
     })
@@ -293,7 +321,8 @@ module.exports = (t, requireMySQL) => {
             checkSegment(t, segment, 'MySQL Pool#query')
           }
 
-          txn.end(t.end)
+          txn.end()
+          t.end()
         })
       })
     })
@@ -311,7 +340,8 @@ module.exports = (t, requireMySQL) => {
             t.error(err, 'no error ocurred')
             t.transaction(txn)
             checkSegment(t, segment)
-            txn.end(t.end)
+            txn.end()
+            t.end()
           })
         })
       })
@@ -331,7 +361,8 @@ module.exports = (t, requireMySQL) => {
               checkSegment(t, segment)
             }
 
-            txn.end(t.end)
+            txn.end()
+            t.end()
           })
         })
       })
@@ -360,22 +391,28 @@ module.exports = (t, requireMySQL) => {
               // In the case where you don't have a server running on localhost
               // the data will still be correctly associated with the query.
               t.ok(seg, 'there is a segment')
+
+              const attributes = seg.getAttributes()
+
               t.equal(
-                seg.parameters.host,
+                attributes.host,
                 helper.agent.config.getHostnameSafe(),
                 'set host'
               )
               t.equal(
-                seg.parameters.port_path_or_id,
+                attributes.port_path_or_id,
                 socketPath,
                 'set path'
               )
               t.equal(
-                seg.parameters.database_name,
+                attributes.database_name,
                 params.database,
                 'set database name'
               )
-              txn.end(socketPool.end.bind(socketPool, t.end))
+
+              txn.end()
+              socketPool.end()
+              t.end()
             })
           })
         }

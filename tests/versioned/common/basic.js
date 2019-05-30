@@ -81,10 +81,9 @@ module.exports = (t, requireMySQL) => {
             t.transaction(txn)
             withRetry.release(client)
 
-            txn.end(() => {
-              checkQueries(t, helper)
-              t.end()
-            })
+            txn.end()
+            checkQueries(t, helper)
+            t.end()
           })
         })
       })
@@ -107,10 +106,9 @@ module.exports = (t, requireMySQL) => {
 
             t.transaction(txn)
             withRetry.release(client)
-            txn.end(() => {
-              checkQueries(t, helper)
-              t.end()
-            })
+            txn.end()
+            checkQueries(t, helper)
+            t.end()
           })
         })
       })
@@ -143,10 +141,9 @@ module.exports = (t, requireMySQL) => {
             t.transaction(txn)
             withRetry.release(client)
             t.ok(results, 'results should be received')
-            txn.end(() => {
-              checkQueries(t, helper)
-              t.end()
-            })
+            txn.end()
+            checkQueries(t, helper)
+            t.end()
           })
         })
       })
@@ -168,28 +165,29 @@ module.exports = (t, requireMySQL) => {
               client.query('SELECT 1 + 1 AS solution', (err) => {
                 var seg = helper.agent.tracer.getSegment().parent
 
+                const attributes = seg.getAttributes()
+
                 t.error(err)
                 t.ok(seg, 'there is a segment')
                 t.equal(
-                  seg.parameters.host,
+                  attributes.host,
                   utils.getDelocalizedHostname(params.host),
                   'set host'
                 )
                 t.equal(
-                  seg.parameters.database_name,
+                  attributes.database_name,
                   'test_db',
                   'set database name'
                 )
                 t.equal(
-                  seg.parameters.port_path_or_id,
+                  attributes.port_path_or_id,
                   '3306',
                   'set port'
                 )
                 withRetry.release(client)
-                txn.end(() => {
-                  checkQueries(t, helper)
-                  t.end()
-                })
+                txn.end()
+                checkQueries(t, helper)
+                t.end()
               })
             })
           })
@@ -228,22 +226,22 @@ module.exports = (t, requireMySQL) => {
           })
 
           setTimeout(function actualEnd() {
-            txn.end((transaction) => {
-              withRetry.release(client)
-              t.ok(results && ended, 'result and end events should occur')
-              var traceRoot = transaction.trace.root
-              var traceRootDuration = traceRoot.timer.getDurationInMillis()
-              var segment = findSegment(
-                traceRoot,
-                'Datastore/statement/MySQL/unknown/select'
-              )
-              var queryNodeDuration = segment.timer.getDurationInMillis()
-              t.ok(Math.abs(duration - queryNodeDuration) < 50,
-                  'query duration should be roughly be the time between query and end')
-              t.ok(traceRootDuration - queryNodeDuration > 900,
-                  'query duration should be small compared to transaction duration')
-              t.end()
-            })
+            txn.end()
+
+            withRetry.release(client)
+            t.ok(results && ended, 'result and end events should occur')
+            var traceRoot = txn.trace.root
+            var traceRootDuration = traceRoot.timer.getDurationInMillis()
+            var segment = findSegment(
+              traceRoot,
+              'Datastore/statement/MySQL/unknown/select'
+            )
+            var queryNodeDuration = segment.timer.getDurationInMillis()
+            t.ok(Math.abs(duration - queryNodeDuration) < 50,
+                'query duration should be roughly be the time between query and end')
+            t.ok(traceRootDuration - queryNodeDuration > 900,
+                'query duration should be small compared to transaction duration')
+            t.end()
           }, 2000)
         })
       })
@@ -269,27 +267,26 @@ module.exports = (t, requireMySQL) => {
 
           query.on('end', function endCallback() {
             setTimeout(() => {
-              txn.end((transaction) => {
-                withRetry.release(client)
-                var traceRoot = transaction.trace.root
-                var querySegment = traceRoot.children[0]
-                t.equal(
-                  querySegment.children.length, 2,
-                  'the query segment should have two children'
-                )
+              txn.end()
+              withRetry.release(client)
+              var traceRoot = txn.trace.root
+              var querySegment = traceRoot.children[0]
+              t.equal(
+                querySegment.children.length, 2,
+                'the query segment should have two children'
+              )
 
-                var childSegment = querySegment.children[1]
-                t.equal(
-                  childSegment.name, 'Callback: endCallback',
-                  'children should be callbacks'
-                )
-                var grandChildSegment = childSegment.children[0]
-                t.equal(
-                  grandChildSegment.name, 'timers.setTimeout',
-                  'grand children should be timers'
-                )
-                t.end()
-              })
+              var childSegment = querySegment.children[1]
+              t.equal(
+                childSegment.name, 'Callback: endCallback',
+                'children should be callbacks'
+              )
+              var grandChildSegment = childSegment.children[0]
+              t.equal(
+                grandChildSegment.name, 'timers.setTimeout',
+                'grand children should be timers'
+              )
+              t.end()
             }, 100)
           })
         })
@@ -313,10 +310,9 @@ module.exports = (t, requireMySQL) => {
 
             t.transaction(txn)
             withRetry.release(client)
-            txn.end(() => {
-              checkQueries(t, helper)
-              t.end()
-            })
+            txn.end()
+            checkQueries(t, helper)
+            t.end()
           })
         })
       })
@@ -339,10 +335,9 @@ module.exports = (t, requireMySQL) => {
 
             t.transaction(txn)
             withRetry.release(client)
-            txn.end(() => {
-              checkQueries(t, helper)
-              t.end()
-            })
+            txn.end()
+            checkQueries(t, helper)
+            t.end()
           })
         })
       })
