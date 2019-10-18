@@ -9,7 +9,6 @@ env:
   - SUITE=versioned
 matrix:
   exclude:
-      env: SUITE=lint
     - node_js: "8"
       env: SUITE=lint
     - node_js: "10"
