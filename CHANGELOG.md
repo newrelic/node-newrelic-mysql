@@ -1,3 +1,15 @@
+### 3.0.0 (2019-10-30)
+
+* **BREAKING** Removed support for Node 6, 7, and 9.
+
+  The minimum supported version is now Node v8. For further information on our support policy, see: https://docs.newrelic.com/docs/agents/nodejs-agent/getting-started/compatibility-requirements-nodejs-agent.
+
+* Added support for Node v12.
+
+* Bumps `tap` to latest major version.
+
+* Bumps minimum required `newrelic` version to `6.0.0` for Node 12 compatible fixes.
+
 ### 2.0.0 (2019-05-30)
 
 * Updates tests to make agent v5 compatible.
