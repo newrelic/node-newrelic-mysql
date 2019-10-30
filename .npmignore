@@ -2,6 +2,7 @@ package-lock.json
 .eslint*
 *.log
 tests/versioned/*/node_modules
+.nyc_output
 
 # VS Code settings
 .vscode
