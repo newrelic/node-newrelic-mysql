@@ -31,7 +31,6 @@
   "devDependencies": {
     "@newrelic/test-utilities": "^4.0.0",
     "async": "^2.6.1",
-    "coveralls": "^3.0.2",
     "eslint": "^5.7.0",
     "generic-pool": "^2.5.4",
     "mysql": "^2.17.1",
