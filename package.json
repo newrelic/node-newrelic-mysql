@@ -20,7 +20,7 @@
     "apm"
   ],
   "author": "New Relic Node.js agent team <nodejs@newrelic.com>",
-  "license": "LicenseRef-LICENSE",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/newrelic/node-newrelic-mysql/issues"
   },
