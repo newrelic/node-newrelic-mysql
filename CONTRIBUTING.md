@@ -65,7 +65,7 @@ We use eslint to enforce certain coding standards. Please see our [.eslintrc](./
 
 ### Testing Guidelines
 
-The MySql instrumentation module includes a suite of unit and functional tests which should be used to
+The MySql instrumentation module includes a suite of functional tests which should be used to
 verify your changes don't break existing functionality.
 
 Functional tests against specific versions of instrumented modules are stored
