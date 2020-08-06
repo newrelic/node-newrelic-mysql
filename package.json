@@ -4,8 +4,7 @@
   "description": "MySQL instrumentation for the New Relic Node agent.",
   "main": "index.js",
   "scripts": {
-    "test": "npm run unit && npm run versioned",
-    "unit": "tap tests/unit/**/*.tap.j",
+    "test": "npm run versioned",
     "versioned": "versioned-tests --minor -i 2 'tests/versioned/**/*.tap.js'",
     "lint": "eslint *.js lib tests"
   },
