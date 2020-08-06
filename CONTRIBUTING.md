@@ -68,8 +68,6 @@ We use eslint to enforce certain coding standards. Please see our [.eslintrc](./
 The MySql instrumentation module includes a suite of unit and functional tests which should be used to
 verify your changes don't break existing functionality.
 
-Unit tests are stored in `tests/`. They're 
-
 Functional tests against specific versions of instrumented modules are stored
 in `test/versioned/`. They are written in 
 [node-tap](https://github.com/isaacs/node-tap), and have the extension `.tap.js`.
