@@ -88,7 +88,7 @@ is on behalf of a company,  please drop us an email at opensource@newrelic.com.
 
 **A note about vulnerabilities**
 
-As noted in our [security policy](https://github.com/newrelic/.github/blob/master/SECURITY.md), New Relic is committed to
+As noted in our [security policy](https://github.com/newrelic/node-newrelic-mysql/security/policy), New Relic is committed to
 the privacy and security of our customers and their data. We believe that providing
 coordinated disclosure by security researchers and engaging with the security community
 are important means to achieve our security goals.
