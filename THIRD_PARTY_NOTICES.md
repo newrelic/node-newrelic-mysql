@@ -297,10 +297,10 @@ THE SOFTWARE.
 
 ### generic-pool
 
-This product includes source derived from [generic-pool](https://github.com/coopernurse/node-pool) ([v2.5.4](https://github.com/coopernurse/node-pool/tree/v2.5.4)), distributed under the [MIT License](https://github.com/coopernurse/node-pool/blob/v2.5.4/README.md):
+This product includes source derived from [generic-pool](https://github.com/coopernurse/node-pool) ([v2.5.4](https://github.com/coopernurse/node-pool/tree/v2.5.4)), distributed under the [MIT License](https://github.com/coopernurse/node-pool/blob/v2.5.4/README.md#license):
 
 ```
-MIT License Copyright (c) <year> <copyright holders>
+Copyright (c) 2010-2016 James Cooper <james@bitmechanic.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
