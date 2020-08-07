@@ -49,19 +49,29 @@ access, see https://newrelicusers-signup.herokuapp.com/.
 
 ### Version Support
 
-When contributing, keep in mind that New Relic customers (that's you!) are running many different versions of Node, some of them pretty old. Changes that depend on the newest version of Node will probably be rejected, especially if they replace something backwards compatible.
+When contributing, keep in mind that New Relic customers (that's you!) are running 
+many different versions of Node, some of them pretty old. Changes that depend on
+the newest version of Node will probably be rejected, especially if they replace
+something backwards compatible.
 
-Be aware that the instrumentation needs to work with a wide range of versions of the instrumented modules, and that code that looks nonsensical or overcomplicated may be that way for compatibility-related reasons. Read all the comments and check the related tests before deciding whether existing code is incorrect.
+Be aware that the instrumentation needs to work with a wide range of versions of
+the instrumented modules, and that code that looks nonsensical or overcomplicated
+may be that way for compatibility-related reasons. Read all the comments and check
+the related tests before deciding whether existing code is incorrect.
 
-If you’re planning on contributing a new feature or an otherwise complex contribution, we kindly ask you to start a conversation with the maintainer team by opening up an Github issue first. 
+If you’re planning on contributing a new feature or an otherwise complex contribution,
+we kindly ask you to start a conversation with the maintainer team by opening up a
+Github issue first. 
 
 ### General Guidelines
 
-In general, we try to limit adding third-party production dependencies. If one is necessary, please be prepared to make a clear case for the need.
+In general, we try to limit adding third-party production dependencies. If one is
+necessary, please be prepared to make a clear case for the need.
 
 ### Coding Style Guidelines/Conventions
 
-We use eslint to enforce certain coding standards. Please see our [.eslintrc](./.eslintrc.js) file for specific rule configuration.
+We use eslint to enforce certain coding standards. Please see our [.eslintrc](./.eslintrc.js)
+file for specific rule configuration.
 
 ### Testing Guidelines
 
@@ -74,7 +84,10 @@ in `test/versioned/`. They are written in
 
 #### Running Tests
 
-To run the test suite locally, you will need a Docker container running MySQL as setup with the [New Relic Node Agent](https://github.com/newrelic/node-newrelic/blob/main/package.json#L131).
+To run the test suite locally, you will need a Docker container running MySQL as setup with
+the [New Relic Node Agent](https://github.com/newrelic/node-newrelic).
+
+Follow the environment setup instructions [here](https://github.com/newrelic/node-newrelic/blob/main/CONTRIBUTING.md#setup).
 
 After getting the Docker container running, just run:
 
