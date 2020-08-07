@@ -4,8 +4,7 @@
   "description": "MySQL instrumentation for the New Relic Node agent.",
   "main": "index.js",
   "scripts": {
-    "test": "npm run unit && npm run versioned",
-    "unit": "tap tests/unit/**/*.tap.j",
+    "test": "npm run versioned",
     "versioned": "versioned-tests --minor -i 2 'tests/versioned/**/*.tap.js'",
     "lint": "eslint *.js lib tests"
   },
@@ -20,7 +19,7 @@
     "apm"
   ],
   "author": "New Relic Node.js agent team <nodejs@newrelic.com>",
-  "license": "LicenseRef-LICENSE",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/newrelic/node-newrelic-mysql/issues"
   },
@@ -29,9 +28,8 @@
     "node": ">=8.0.0"
   },
   "devDependencies": {
-    "@newrelic/test-utilities": "^3.0.0",
+    "@newrelic/test-utilities": "^4.0.0",
     "async": "^2.6.1",
-    "coveralls": "^3.0.2",
     "eslint": "^5.7.0",
     "generic-pool": "^2.5.4",
     "mysql": "^2.17.1",
