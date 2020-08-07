@@ -297,7 +297,7 @@ THE SOFTWARE.
 
 ### generic-pool
 
-This product includes source derived from [generic-pool](https://github.com/coopernurse/node-pool) ([v2.5.4](https://github.com/coopernurse/node-pool/tree/v2.5.4)), distributed under the [MIT License](https://github.com/coopernurse/node-pool/blob/v2.5.4/README.md):
+This product includes source derived from [generic-pool](https://github.com/coopernurse/node-pool) ([v2.5.4](https://github.com/coopernurse/node-pool/tree/v2.5.4)), distributed under the [MIT License](https://github.com/coopernurse/node-pool/blob/v2.5.4/README.md#license):
 
 ```
 Copyright (c) 2010-2016 James Cooper <james@bitmechanic.com>
