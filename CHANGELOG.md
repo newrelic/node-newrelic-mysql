@@ -1,3 +1,16 @@
+### 4.0.0 (2020-08-10):
+
+* Updated to Apache 2.0 license.
+* Bumped minimum peer dependency (and dev dependency) of newrelic (agent) to 6.11 for license matching.
+* Added third party notices file and metadata for dependencies.
+* Updated README with more detail.
+* Added issue templates for bugs and enhancements.
+* Added code of conduct file.
+* Added contributing guide.
+* Added pull request template.
+* Migrated CI to GitHub Actions.
+* Added copyright headers to all source files.
+
 ### 3.0.0 (2019-10-30)
 
 * **BREAKING** Removed support for Node 6, 7, and 9.
