@@ -5,7 +5,7 @@
 New Relic's offical MySQL instrumentation for use with the New Relic [Node.js
 agent](https://github.com/newrelic/node-newrelic).
 
-## Installation and getting started
+## Installation and Getting Started
 
 This module is a dependency of the agent and is installed with it by running:
 
@@ -73,25 +73,24 @@ We define "Personal Data" as any information relating to an identified or identi
 individual, including, for example, your name, phone number, post code or zip code,
 Device ID, IP address and email address.
 
-Please review [New Relic’s General Data Privacy Notice](https://newrelic.com/termsandconditions/privacy) for more information.
+For more information, review [New Relic’s General Data Privacy Notice](https://newrelic.com/termsandconditions/privacy).
 
 ## Roadmap
 See our [roadmap](https://github.com/newrelic/node-newrelic/blob/main/ROADMAP_Node.md), to learn more about our product vision,
 understand our plans, and provide us valuable feedback. Remove this section if it’s not needed.
 
-## Contributing
+## Contribute
+
 We encourage your contributions to improve New Relic MySQL instrumentation!  Keep in mind
 when you submit your pull request, you'll need to sign the CLA via the click-through using
 CLA-Assistant. You only have to sign the CLA one time per project.
+
 If you have any questions, or to execute our corporate CLA, required if your contribution
 is on behalf of a company,  please drop us an email at opensource@newrelic.com.
 
 **A note about vulnerabilities**
 
-As noted in our [security policy](https://github.com/newrelic/node-newrelic-mysql/security/policy), New Relic is committed to
-the privacy and security of our customers and their data. We believe that providing
-coordinated disclosure by security researchers and engaging with the security community
-are important means to achieve our security goals.
+As noted in our [security policy](https://github.com/newrelic/node-newrelic-mysql/security/policy), New Relic is committed to the privacy and security of our customers and their data. We believe that providing coordinated disclosure by security researchers and engaging with the security community are important means to achieve our security goals.
 
 If you believe you have found a security vulnerability in this project or any of New Relic's
 products or websites, we welcome and greatly appreciate you reporting it to New Relic
@@ -99,19 +98,15 @@ through [HackerOne](https://hackerone.com/newrelic).
 
 If you would like to contribute to this project, please review [these guidelines](https://github.com/newrelic/node-newrelic-mysql/blob/main/CONTRIBUTING.md).
 
-To [all contributors](https://github.com/newrelic/node-newrelic-mysql/graphs/contributors),we thank you!  Without your contribution,
-this project would not be what it is today.
-
-We also host a community project page dedicated to
+To [all contributors](https://github.com/newrelic/node-newrelic-mysql/graphs/contributors),we thank you!  Without your contribution, this project would not be what it is today. We also host a community project page dedicated to
 [the New Relic MySql Instrumentation package](https://opensource.newrelic.com/newrelic/node-newrelic-mysql).
 
 ## License
+
 New Relic MySQL instrumentation is licensed under the [Apache
 2.0](http://apache.org/licenses/LICENSE-2.0.txt) License.
 
-New Relic MySQL instrumentation also uses source code from third-party libraries. You can find full
-details on which libraries are used and the terms under which they are licensed in the third-party
-notices document.
+New Relic MySQL instrumentation also uses source code from third-party libraries. You can find full details on which libraries are used and the terms under which they are licensed in the third-party notices document.
 
 [1]: https://github.com/newrelic/node-newrelic-mysql/workflows/mysql%20Instrumentation%20CI/badge.svg
 [2]: https://github.com/newrelic/node-newrelic-mysql/actions
