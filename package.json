@@ -28,7 +28,7 @@
     "node": ">=8.0.0"
   },
   "devDependencies": {
-    "@newrelic/test-utilities": "^4.0.0",
+    "@newrelic/test-utilities": "^5.1.0",
     "async": "^2.6.1",
     "eslint": "^5.7.0",
     "generic-pool": "^2.5.4",
