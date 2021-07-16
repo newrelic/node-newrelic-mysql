@@ -14,20 +14,23 @@ const params = setup.params
 
 module.exports = (t, requireMySQL) => {
   t.test('MySQL transactions', {timeout: 30000}, (t) => {
-    t.plan(8)
+    t.autoend()
+    let helper = null
+    let mysql = null
 
-    // set up the instrumentation before loading MySQL
-    const helper = utils.TestAgent.makeInstrumented()
-    const mysql = requireMySQL(helper)
+    t.beforeEach(async function() {
+      // set up the instrumentation before loading MySQL
+      helper = utils.TestAgent.makeInstrumented()
+      mysql = requireMySQL(helper)
+      await setup(mysql)
+    })
 
-    t.tearDown(() => helper.unload())
+    t.teardown(() => helper.unload())
 
-    setup(mysql, function(error) {
-      t.error(error)
-
+    t.test('basic transaction', (t) => {
       const client = mysql.createConnection(params)
 
-      t.tearDown(() => client.end())
+      t.teardown(() => client.end())
 
       t.notOk(helper.getTransaction(), 'no transaction should be in play yet')
       helper.runInTransaction((txn) => {
@@ -53,6 +56,7 @@ module.exports = (t, requireMySQL) => {
               }
 
               t.transaction(txn)
+              t.end()
             })
           })
         })

@@ -30,11 +30,9 @@ function getConfig(extras) {
 }
 
 module.exports = (t, requireMySQL) => {
-  t.test('See if mysql is running', (t) => {
-    setup(requireMySQL(), (err) => {
-      t.error(err, 'should not fail to set up mysql database')
-      t.end()
-    })
+  t.test('See if mysql is running', async(t) => {
+    await setup(requireMySQL())
+    t.end()
   })
 
   t.test('bad config', (t) => {
@@ -49,13 +47,13 @@ module.exports = (t, requireMySQL) => {
       database: params.database
     }
 
-    t.tearDown(() => {
+    t.teardown(() => {
       helper.unload()
     })
 
     t.test((t) => {
       var poolCluster = mysql.createPoolCluster()
-      t.tearDown(() => poolCluster.end())
+      t.teardown(() => poolCluster.end())
 
       poolCluster.add(badConfig) // anonymous group
       poolCluster.getConnection((err) => {
@@ -65,10 +63,10 @@ module.exports = (t, requireMySQL) => {
         var stack = new Error().stack
         var frames = stack.split('\n').slice(3,8)
 
-        t.notEqual(frames[0], frames[1], 'do not multi-wrap')
-        t.notEqual(frames[0], frames[2], 'do not multi-wrap')
-        t.notEqual(frames[0], frames[3], 'do not multi-wrap')
-        t.notEqual(frames[0], frames[4], 'do not multi-wrap')
+        t.not(frames[0], frames[1], 'do not multi-wrap')
+        t.not(frames[0], frames[2], 'do not multi-wrap')
+        t.not(frames[0], frames[3], 'do not multi-wrap')
+        t.not(frames[0], frames[4], 'do not multi-wrap')
 
         t.ok(err, 'should be an error')
         t.end()
@@ -86,20 +84,21 @@ module.exports = (t, requireMySQL) => {
     var mysql = null
     var pool = null
 
-    t.beforeEach((done) => {
+    t.beforeEach(async() => {
       helper = utils.TestAgent.makeInstrumented()
       mysql = requireMySQL(helper)
       pool = mysql.createPool(config)
-      setup(mysql, done)
+      await setup(mysql)
     })
 
-    t.afterEach((done) => {
+    t.afterEach(() => {
       helper.unload()
-      pool.end(done)
-
-      helper = null
-      mysql = null
-      pool = null
+      return new Promise((resolve) => {
+        pool.end(resolve)
+        helper = null
+        mysql = null
+        pool = null
+      })
     })
 
     // make sure a connection exists in the pool before any tests are run
@@ -337,7 +336,7 @@ module.exports = (t, requireMySQL) => {
         pool.getConnection(function shouldBeWrapped(err, connection) {
           t.error(err, 'should not have error')
           t.transaction(txn)
-          t.tearDown(() => connection.release())
+          t.teardown(() => connection.release())
 
           connection.query('SELECT 1 + 1 AS solution', (err) => {
             var segment = helper.agent.tracer.getSegment().parent
@@ -357,7 +356,7 @@ module.exports = (t, requireMySQL) => {
         pool.getConnection(function shouldBeWrapped(err, connection) {
           t.error(err, 'should not have error')
           t.transaction(txn)
-          t.tearDown(() => connection.release())
+          t.teardown(() => connection.release())
 
           connection.query('SELECT ? + ? AS solution', [1,1], (err) => {
             t.error(err)
@@ -433,19 +432,17 @@ module.exports = (t, requireMySQL) => {
     let helper = null
     let mysql = null
 
-    t.beforeEach((done) => {
+    t.beforeEach(async() => {
       helper = utils.TestAgent.makeInstrumented()
       mysql = requireMySQL(helper)
-      setup(mysql, done)
+      await setup(mysql)
     })
 
-    t.afterEach((done) => {
+    t.afterEach(() => {
       helper.unload()
 
       helper = null
       mysql = null
-
-      done()
     })
 
     t.test('primer', (t) => {
