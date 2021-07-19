@@ -11,18 +11,26 @@ const utils = require('@newrelic/test-utilities')
 
 module.exports = (t, requireMySQL) => {
   t.test('MySQL instrumentation with a connection pool', {timeout: 30000}, (t) => {
-    let helper = utils.TestAgent.makeInstrumented()
-    let mysql = requireMySQL(helper)
-    let pool = setup.pool(mysql)
+    t.autoend()
+    let helper = null
+    let mysql = null
+    let pool = null
 
-    t.tearDown(() => {
+    t.beforeEach(async function() {
+      helper = utils.TestAgent.makeInstrumented()
+      mysql = requireMySQL(helper)
+      pool = setup.pool(mysql)
+      await setup(mysql)
+    })
+
+    t.teardown(() => {
       pool.drain(() => {
         pool.destroyAllNow()
         helper.unload()
       })
     })
 
-    var withRetry = {
+    const withRetry = {
       getClient: (callback, counter) => {
         if (!counter) {
           counter = 1
@@ -48,7 +56,7 @@ module.exports = (t, requireMySQL) => {
       }
     }
 
-    var dal = {
+    const dal = {
       lookup: (params, callback) => {
         if (!params.id) {
           callback(new Error('Must include ID to look up.'))
@@ -76,15 +84,15 @@ module.exports = (t, requireMySQL) => {
       }
     }
 
-    setup(mysql, function(err) {
-      t.error(err)
+
+    t.test('basic transaction', (t) => {
       t.notOk(helper.getTransaction(), 'no transaction should be in play yet')
       helper.runInTransaction((txn) => {
         var context = {
           id: 1
         }
         dal.lookup(context, (error, row) => {
-          if (!t.error(err) || !t.transaction(txn)) {
+          if (!t.error(error) || !t.transaction(txn)) {
             t.end()
             return
           }
@@ -98,8 +106,8 @@ module.exports = (t, requireMySQL) => {
               return
             }
 
-            t.equals(row.id, 1, 'mysql should still work (found id)')
-            t.equals(
+            t.equal(row.id, 1, 'mysql should still work (found id)')
+            t.equal(
               row.test_value,
               'hamburgefontstiv',
               'mysql driver should still work (found value)'
@@ -115,14 +123,14 @@ module.exports = (t, requireMySQL) => {
 
             var selectSegment = trace.root.children[trace.root.children.length - 1]
             t.ok(selectSegment, 'trace segment for first SELECT should exist')
-            t.equals(
+            t.equal(
               selectSegment.name,
               `Datastore/statement/MySQL/${setup.params.database}.test/select`,
               'should register as SELECT'
             )
 
-            t.equals(selectSegment.children.length, 1, 'should have a callback segment')
-            t.equals(selectSegment.children[0].name, 'Callback: <anonymous>')
+            t.equal(selectSegment.children.length, 1, 'should have a callback segment')
+            t.equal(selectSegment.children[0].name, 'Callback: <anonymous>')
 
             selectSegment.children[0].children
               .map((segment) => segment.name)

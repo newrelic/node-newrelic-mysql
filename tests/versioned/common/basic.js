@@ -22,22 +22,24 @@ module.exports = (t, requireMySQL) => {
     let mysql = null
     let pool = null
 
-    t.beforeEach(function(done) {
+    t.beforeEach(async function() {
       helper = utils.TestAgent.makeInstrumented()
       mysql = requireMySQL(helper)
-      setup(mysql, done)
       pool = setup.pool(mysql)
+      await setup(mysql)
     })
 
-    t.afterEach(function(done) {
+    t.afterEach(async function() {
       if (!pool) {
-        done()
         return
       }
-      pool.drain(() => {
-        pool.destroyAllNow()
-        helper.unload()
-        done()
+
+      await new Promise((resolve) => {
+        pool.drain(() => {
+          pool.destroyAllNow()
+          helper.unload()
+          resolve()
+        })
       })
     })
 

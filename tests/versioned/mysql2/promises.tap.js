@@ -21,45 +21,38 @@ tap.test('mysql2 promises', {timeout: 30000}, (t) => {
   let mysql = null
   let client = null
 
-  t.beforeEach((done) => {
-    // Perform the setup using the callback API.
-    setup(require('mysql2'), (err) => {
-      if (err) {
-        done(err)
-      }
+  t.beforeEach(async() => {
+    await setup(require('mysql2'))
 
-      // It is important to keep this setup code inside the callback to trigger
-      // certain potential error cases with module resolution.
+    // It is important to keep this setup code to trigger
+    // certain potential error cases with module resolution.
 
-      helper = utils.TestAgent.makeInstrumented()
+    helper = utils.TestAgent.makeInstrumented()
 
-      // Stub the normal mysql2 instrumentation to avoid it hiding issues with the
-      // promise instrumentation.
-      helper.registerInstrumentation({
-        moduleName: 'mysql2',
-        type: 'datastore',
-        onRequire: () => {}
-      })
-
-      helper.registerInstrumentation({
-        moduleName: 'mysql2/promise',
-        type: 'datastore',
-        onRequire: require('../../../lib/instrumentation').promiseInitialize
-      })
-
-      mysql = require('mysql2/promise')
-
-      mysql.createConnection(params).then((c) => {client = c; done()}, done)
+    // Stub the normal mysql2 instrumentation to avoid it hiding issues with the
+    // promise instrumentation.
+    helper.registerInstrumentation({
+      moduleName: 'mysql2',
+      type: 'datastore',
+      onRequire: () => {}
     })
+
+    helper.registerInstrumentation({
+      moduleName: 'mysql2/promise',
+      type: 'datastore',
+      onRequire: require('../../../lib/instrumentation').promiseInitialize
+    })
+
+    mysql = require('mysql2/promise')
+
+    client = await mysql.createConnection(params)
   })
 
-  t.afterEach((done) => {
+  t.afterEach(async() => {
     helper.unload()
     if (client) {
-      client.end().then(done, done)
+      await client.end()
       client = null
-    } else {
-      done()
     }
   })
 
