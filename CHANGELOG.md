@@ -6,7 +6,7 @@
 
 * Added support for Node 16.
 * Bumped `@newrelic/test-utilities` to ^5.1.0.
-* Updated package.json to use files list instead of `.npmignore`
+* Updated package.json to use files list instead of `.npmignore`.
 * Bumped `tap` to ^15.0.9.
 * Added Node 14 to CI.
 * Updated `README` for internal consistency. Thank you @paperclypse for the contribution.
