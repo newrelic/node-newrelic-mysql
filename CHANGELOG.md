@@ -1,3 +1,16 @@
+### 5.0.0 (2021-07-21):
+
+* **BREAKING** Removed support for Node 10.
+
+  The minimum supported version is now Node v12. For further information on our support policy, see: https://docs.newrelic.com/docs/agents/nodejs-agent/getting-started/compatibility-requirements-nodejs-agent.
+
+* Added support for Node 16.
+* Bumped `@newrelic/test-utilities` to ^5.1.0.
+* Updated package.json to use files list instead of `.npmignore`
+* Bumped `tap` to ^15.0.9.
+* Added Node 14 to CI.
+* Updated `README` for internal consistency. Thank you @paperclypse for the contribution.
+
 ### 4.0.0 (2020-08-10):
 
 * Updated to Apache 2.0 license.
