@@ -1,32 +1,32 @@
 {
-  "lastUpdated": "Wed Aug 05 2020 16:00:52 GMT-0700 (Pacific Daylight Time)",
+  "lastUpdated": "Mon Jul 19 2021 15:38:53 GMT-0700 (Pacific Daylight Time)",
   "projectName": "New Relic MySql Instrumentation",
   "projectUrl": "https://github.com/newrelic/node-newrelic-mysql",
   "includeDev": true,
   "dependencies": {},
   "devDependencies": {
-    "@newrelic/test-utilities@4.0.0": {
+    "@newrelic/test-utilities@5.1.0": {
       "name": "@newrelic/test-utilities",
-      "version": "4.0.0",
-      "range": "^4.0.0",
+      "version": "5.1.0",
+      "range": "^5.1.0",
       "licenses": "Apache-2.0",
       "repoUrl": "https://github.com/newrelic/node-test-utilities",
-      "versionedRepoUrl": "https://github.com/newrelic/node-test-utilities/tree/v4.0.0",
+      "versionedRepoUrl": "https://github.com/newrelic/node-test-utilities/tree/v5.1.0",
       "licenseFile": "node_modules/@newrelic/test-utilities/LICENSE",
-      "licenseUrl": "https://github.com/newrelic/node-test-utilities/blob/v4.0.0/LICENSE",
+      "licenseUrl": "https://github.com/newrelic/node-test-utilities/blob/v5.1.0/LICENSE",
       "licenseTextSource": "file",
       "publisher": "New Relic Node.js agent team",
       "email": "nodejs@newrelic.com"
     },
-    "async@2.6.3": {
+    "async@3.2.0": {
       "name": "async",
-      "version": "2.6.3",
-      "range": "^2.6.1",
+      "version": "3.2.0",
+      "range": "^3.2.0",
       "licenses": "MIT",
       "repoUrl": "https://github.com/caolan/async",
-      "versionedRepoUrl": "https://github.com/caolan/async/tree/v2.6.3",
+      "versionedRepoUrl": "https://github.com/caolan/async/tree/v3.2.0",
       "licenseFile": "node_modules/async/LICENSE",
-      "licenseUrl": "https://github.com/caolan/async/blob/v2.6.3/LICENSE",
+      "licenseUrl": "https://github.com/caolan/async/blob/v3.2.0/LICENSE",
       "licenseTextSource": "file",
       "publisher": "Caolan McMahon"
     },
@@ -83,28 +83,28 @@
       "email": "felix@debuggable.com",
       "url": "http://debuggable.com/"
     },
-    "newrelic@6.11.0": {
+    "newrelic@7.5.2": {
       "name": "newrelic",
-      "version": "6.11.0",
-      "range": "^6.0.0",
+      "version": "7.5.2",
+      "range": "^7.5.2",
       "licenses": "Apache-2.0",
       "repoUrl": "https://github.com/newrelic/node-newrelic",
-      "versionedRepoUrl": "https://github.com/newrelic/node-newrelic/tree/v6.11.0",
+      "versionedRepoUrl": "https://github.com/newrelic/node-newrelic/tree/v7.5.2",
       "licenseFile": "node_modules/newrelic/LICENSE",
-      "licenseUrl": "https://github.com/newrelic/node-newrelic/blob/v6.11.0/LICENSE",
+      "licenseUrl": "https://github.com/newrelic/node-newrelic/blob/v7.5.2/LICENSE",
       "licenseTextSource": "file",
       "publisher": "New Relic Node.js agent team",
       "email": "nodejs@newrelic.com"
     },
-    "tap@14.10.8": {
+    "tap@15.0.9": {
       "name": "tap",
-      "version": "14.10.8",
-      "range": "^14.7.1",
+      "version": "15.0.9",
+      "range": "^15.0.9",
       "licenses": "ISC",
       "repoUrl": "https://github.com/tapjs/node-tap",
-      "versionedRepoUrl": "https://github.com/tapjs/node-tap/tree/v14.10.8",
+      "versionedRepoUrl": "https://github.com/tapjs/node-tap/tree/v15.0.9",
       "licenseFile": "node_modules/tap/LICENSE",
-      "licenseUrl": "https://github.com/tapjs/node-tap/blob/v14.10.8/LICENSE",
+      "licenseUrl": "https://github.com/tapjs/node-tap/blob/v15.0.9/LICENSE",
       "licenseTextSource": "file",
       "publisher": "Isaac Z. Schlueter",
       "email": "i@izs.me",

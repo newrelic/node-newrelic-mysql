@@ -34,7 +34,7 @@ code, the source code can be found at [https://github.com/newrelic/node-newrelic
 
 ### @newrelic/test-utilities
 
-This product includes source derived from [@newrelic/test-utilities](https://github.com/newrelic/node-test-utilities) ([v4.0.0](https://github.com/newrelic/node-test-utilities/tree/v4.0.0)), distributed under the [Apache-2.0 License](https://github.com/newrelic/node-test-utilities/blob/v4.0.0/LICENSE):
+This product includes source derived from [@newrelic/test-utilities](https://github.com/newrelic/node-test-utilities) ([v5.1.0](https://github.com/newrelic/node-test-utilities/tree/v5.1.0)), distributed under the [Apache-2.0 License](https://github.com/newrelic/node-test-utilities/blob/v5.1.0/LICENSE):
 
 ```
                                  Apache License
@@ -243,7 +243,7 @@ This product includes source derived from [@newrelic/test-utilities](https://git
 
 ### async
 
-This product includes source derived from [async](https://github.com/caolan/async) ([v2.6.3](https://github.com/caolan/async/tree/v2.6.3)), distributed under the [MIT License](https://github.com/caolan/async/blob/v2.6.3/LICENSE):
+This product includes source derived from [async](https://github.com/caolan/async) ([v3.2.0](https://github.com/caolan/async/tree/v3.2.0)), distributed under the [MIT License](https://github.com/caolan/async/blob/v3.2.0/LICENSE):
 
 ```
 Copyright (c) 2010-2018 Caolan McMahon
@@ -297,10 +297,10 @@ THE SOFTWARE.
 
 ### generic-pool
 
-This product includes source derived from [generic-pool](https://github.com/coopernurse/node-pool) ([v2.5.4](https://github.com/coopernurse/node-pool/tree/v2.5.4)), distributed under the [MIT License](https://github.com/coopernurse/node-pool/blob/v2.5.4/README.md#license):
+This product includes source derived from [generic-pool](https://github.com/coopernurse/node-pool) ([v2.5.4](https://github.com/coopernurse/node-pool/tree/v2.5.4)), distributed under the [MIT License](https://github.com/coopernurse/node-pool/blob/v2.5.4/README.md):
 
 ```
-Copyright (c) 2010-2016 James Cooper <james@bitmechanic.com>
+MIT License Copyright (c) 2010-2016 James Cooper <james@bitmechanic.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
@@ -365,10 +365,10 @@ Copyright (c) 2012 Felix Geisendörfer (felix@debuggable.com) and contributors
 
 ### newrelic
 
-This product includes source derived from [newrelic](https://github.com/newrelic/node-newrelic) ([v6.11.0](https://github.com/newrelic/node-newrelic/tree/v6.11.0)), distributed under the [Apache-2.0 License](https://github.com/newrelic/node-newrelic/blob/v6.11.0/LICENSE):
+This product includes source derived from [newrelic](https://github.com/newrelic/node-newrelic) ([v7.5.2](https://github.com/newrelic/node-newrelic/tree/v7.5.2)), distributed under the [Apache-2.0 License](https://github.com/newrelic/node-newrelic/blob/v7.5.2/LICENSE):
 
 ```
-Apache License
+                                 Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
 
@@ -573,7 +573,7 @@ Apache License
 
 ### tap
 
-This product includes source derived from [tap](https://github.com/tapjs/node-tap) ([v14.10.8](https://github.com/tapjs/node-tap/tree/v14.10.8)), distributed under the [ISC License](https://github.com/tapjs/node-tap/blob/v14.10.8/LICENSE):
+This product includes source derived from [tap](https://github.com/tapjs/node-tap) ([v15.0.9](https://github.com/tapjs/node-tap/tree/v15.0.9)), distributed under the [ISC License](https://github.com/tapjs/node-tap/blob/v15.0.9/LICENSE):
 
 ```
 The ISC License
