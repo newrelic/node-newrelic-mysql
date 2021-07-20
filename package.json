@@ -1,6 +1,6 @@
 {
   "name": "@newrelic/mysql",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "MySQL instrumentation for the New Relic Node agent.",
   "main": "index.js",
   "scripts": {
