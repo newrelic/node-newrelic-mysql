@@ -8,7 +8,8 @@
     "versioned": "npm run versioned:npm6",
     "versioned:npm6": "versioned-tests --minor -i 2 'tests/versioned/**/*.tap.js'",
     "versioned:npm7": "versioned-tests --minor --all -i 2 'tests/versioned/**/*.tap.js'",
-    "lint": "eslint *.js lib tests"
+    "lint": "eslint *.js lib tests",
+    "lint:fix": "eslint --fix *.js lib tests"
   },
   "repository": {
     "type": "git",
@@ -32,11 +33,16 @@
   "devDependencies": {
     "@newrelic/test-utilities": "^5.1.0",
     "async": "^3.2.0",
-    "eslint": "^5.7.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-header": "^3.1.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.4.0",
     "generic-pool": "^2.5.4",
     "mysql": "^2.17.1",
     "mysql2": "^1.7.0",
-    "newrelic": "^7.5.2",
+    "newrelic": "^8.1.0",
+    "prettier": "^2.3.2",
     "tap": "^15.0.9"
   },
   "peerDependencies": {

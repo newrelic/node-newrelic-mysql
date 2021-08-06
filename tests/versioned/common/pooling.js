@@ -1,22 +1,21 @@
 /*
-* Copyright 2020 New Relic Corporation. All rights reserved.
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright 2020 New Relic Corporation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 'use strict'
 
 const setup = require('./setup')
 const utils = require('@newrelic/test-utilities')
 
-
 module.exports = (t, requireMySQL) => {
-  t.test('MySQL instrumentation with a connection pool', {timeout: 30000}, (t) => {
+  t.test('MySQL instrumentation with a connection pool', { timeout: 30000 }, (t) => {
     t.autoend()
     let helper = null
     let mysql = null
     let pool = null
 
-    t.beforeEach(async function() {
+    t.beforeEach(async function () {
       helper = utils.TestAgent.makeInstrumented()
       mysql = requireMySQL(helper)
       pool = setup.pool(mysql)
@@ -43,7 +42,7 @@ module.exports = (t, requireMySQL) => {
               pool.destroy(client)
               withRetry.getClient(callback, counter)
             } else {
-              callback(new Error('Couldn\'t connect to DB after 10 attempts.'))
+              callback(new Error("Couldn't connect to DB after 10 attempts."))
             }
           } else {
             callback(null, client)
@@ -51,7 +50,7 @@ module.exports = (t, requireMySQL) => {
         })
       },
 
-      release: function(client) {
+      release: function (client) {
         pool.release(client)
       }
     }
@@ -83,7 +82,6 @@ module.exports = (t, requireMySQL) => {
         })
       }
     }
-
 
     t.test('basic transaction', (t) => {
       t.notOk(helper.getTransaction(), 'no transaction should be in play yet')

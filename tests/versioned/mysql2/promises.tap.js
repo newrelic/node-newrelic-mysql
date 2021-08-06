@@ -1,7 +1,7 @@
 /*
-* Copyright 2020 New Relic Corporation. All rights reserved.
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright 2020 New Relic Corporation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 'use strict'
 
@@ -11,17 +11,16 @@ const utils = require('@newrelic/test-utilities')
 
 const params = setup.params
 
-
 utils(tap)
 
-tap.test('mysql2 promises', {timeout: 30000}, (t) => {
+tap.test('mysql2 promises', { timeout: 30000 }, (t) => {
   t.autoend()
 
   let helper = null
   let mysql = null
   let client = null
 
-  t.beforeEach(async() => {
+  t.beforeEach(async () => {
     await setup(require('mysql2'))
 
     // It is important to keep this setup code to trigger
@@ -48,7 +47,7 @@ tap.test('mysql2 promises', {timeout: 30000}, (t) => {
     client = await mysql.createConnection(params)
   })
 
-  t.afterEach(async() => {
+  t.afterEach(async () => {
     helper.unload()
     if (client) {
       await client.end()
@@ -57,59 +56,73 @@ tap.test('mysql2 promises', {timeout: 30000}, (t) => {
   })
 
   t.test('basic transaction', (t) => {
-    return helper.runInTransaction((tx) => {
-      return client.query('SELECT 1').then(() => {
-        t.transaction(tx)
-        tx.end()
+    return helper
+      .runInTransaction((tx) => {
+        return client.query('SELECT 1').then(() => {
+          t.transaction(tx)
+          tx.end()
+        })
       })
-    }).then(() => checkQueries(t, helper))
+      .then(() => checkQueries(t, helper))
   })
 
   t.test('query with values', (t) => {
-    return helper.runInTransaction((tx) => {
-      return client.query('SELECT 1', []).then(() => {
-        t.transaction(tx)
-        tx.end()
+    return helper
+      .runInTransaction((tx) => {
+        return client.query('SELECT 1', []).then(() => {
+          t.transaction(tx)
+          tx.end()
+        })
       })
-    }).then(() => checkQueries(t, helper))
+      .then(() => checkQueries(t, helper))
   })
 
   t.test('database name should change with use statement', (t) => {
-    return helper.runInTransaction((tx) => {
-      return client.query('create database if not exists test_db').then(() => {
-        t.transaction(tx)
-        return client.query('use test_db')
-      }).then(() => {
-        t.transaction(tx)
-        return client.query('SELECT 1 + 1 AS solution')
-      }).then(() => {
-        t.transaction(tx)
+    return helper
+      .runInTransaction((tx) => {
+        return client
+          .query('create database if not exists test_db')
+          .then(() => {
+            t.transaction(tx)
+            return client.query('use test_db')
+          })
+          .then(() => {
+            t.transaction(tx)
+            return client.query('SELECT 1 + 1 AS solution')
+          })
+          .then(() => {
+            t.transaction(tx)
 
-        const segment = tx.trace.root.children[2]
-        const attributes = segment.getAttributes()
-        t.equal(
-          attributes.host,
-          utils.getDelocalizedHostname(params.host),
-          'should set host name'
-        )
-        t.equal(attributes.database_name, 'test_db', 'should follow use statement')
-        t.equal(attributes.port_path_or_id, '3306', 'should set port')
+            const segment = tx.trace.root.children[2]
+            const attributes = segment.getAttributes()
+            t.equal(
+              attributes.host,
+              utils.getDelocalizedHostname(params.host),
+              'should set host name'
+            )
+            t.equal(attributes.database_name, 'test_db', 'should follow use statement')
+            t.equal(attributes.port_path_or_id, '3306', 'should set port')
 
-        tx.end()
+            tx.end()
+          })
       })
-    }).then(() => checkQueries(t, helper))
+      .then(() => checkQueries(t, helper))
   })
 
   t.test('query with options object rather than sql', (t) => {
-    return helper.runInTransaction((tx) => {
-      return client.query({sql: 'SELECT 1'}).then(() => tx.end())
-    }).then(() => checkQueries(t, helper))
+    return helper
+      .runInTransaction((tx) => {
+        return client.query({ sql: 'SELECT 1' }).then(() => tx.end())
+      })
+      .then(() => checkQueries(t, helper))
   })
 
   t.test('query with options object and values', (t) => {
-    return helper.runInTransaction((tx) => {
-      return client.query({sql: 'SELECT 1'}, []).then(() => tx.end())
-    }).then(() => checkQueries(t, helper))
+    return helper
+      .runInTransaction((tx) => {
+        return client.query({ sql: 'SELECT 1' }, []).then(() => tx.end())
+      })
+      .then(() => checkQueries(t, helper))
   })
 })
 
