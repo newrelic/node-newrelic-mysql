@@ -1,7 +1,7 @@
 /*
-* Copyright 2020 New Relic Corporation. All rights reserved.
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright 2020 New Relic Corporation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 'use strict'
 
@@ -22,7 +22,8 @@ function getConfig(extras) {
     database: params.database
   }
 
-  for (var key in extras) { // eslint-disable-line guard-for-in
+  // eslint-disable-next-line guard-for-in
+  for (var key in extras) {
     conf[key] = extras[key]
   }
 
@@ -30,7 +31,7 @@ function getConfig(extras) {
 }
 
 module.exports = (t, requireMySQL) => {
-  t.test('See if mysql is running', async(t) => {
+  t.test('See if mysql is running', async (t) => {
     await setup(requireMySQL())
     t.end()
   })
@@ -61,7 +62,7 @@ module.exports = (t, requireMySQL) => {
         // wrap the callback multiple times.
 
         var stack = new Error().stack
-        var frames = stack.split('\n').slice(3,8)
+        var frames = stack.split('\n').slice(3, 8)
 
         t.not(frames[0], frames[1], 'do not multi-wrap')
         t.not(frames[0], frames[2], 'do not multi-wrap')
@@ -79,12 +80,12 @@ module.exports = (t, requireMySQL) => {
   // TODO: test .query without callback
   // TODO: test notice errors
   // TODO: test sql capture
-  t.test('mysql built-in connection pools', {timeout: 30 * 1000}, (t) => {
+  t.test('mysql built-in connection pools', { timeout: 30 * 1000 }, (t) => {
     var helper = null
     var mysql = null
     var pool = null
 
-    t.beforeEach(async() => {
+    t.beforeEach(async () => {
       helper = utils.TestAgent.makeInstrumented()
       mysql = requireMySQL(helper)
       pool = mysql.createPool(config)
@@ -124,21 +125,9 @@ module.exports = (t, requireMySQL) => {
 
           const attributes = seg.getAttributes()
 
-          t.equal(
-            attributes.host,
-            utils.getDelocalizedHostname(config.host),
-            'set host'
-          )
-          t.equal(
-            attributes.database_name,
-            params.database,
-            'set database name'
-          )
-          t.equal(
-            attributes.port_path_or_id,
-            String(config.port),
-            'set port'
-          )
+          t.equal(attributes.host, utils.getDelocalizedHostname(config.host), 'set host')
+          t.equal(attributes.database_name, params.database, 'set database name')
+          t.equal(attributes.port_path_or_id, String(config.port), 'set port')
           txn.end()
           t.end()
         })
@@ -155,19 +144,9 @@ module.exports = (t, requireMySQL) => {
 
           const attributes = seg.getAttributes()
 
-          t.notOk(
-            attributes.host,
-            'should have no host attribute'
-          )
-          t.notOk(
-            attributes.port_path_or_id,
-            'should have no port attribute'
-          )
-          t.equal(
-            attributes.database_name,
-            params.database,
-            'should set database name'
-          )
+          t.notOk(attributes.host, 'should have no host attribute')
+          t.notOk(attributes.port_path_or_id, 'should have no port attribute')
+          t.equal(attributes.database_name, params.database, 'should set database name')
           helper.agent.config.datastore_tracer.instance_reporting.enabled = true
           txn.end()
           t.end()
@@ -185,20 +164,9 @@ module.exports = (t, requireMySQL) => {
 
           const attributes = seg.getAttributes()
 
-          t.equal(
-            attributes.host,
-            utils.getDelocalizedHostname(config.host),
-            'set host'
-          )
-          t.equal(
-            attributes.port_path_or_id,
-            String(config.port),
-            'set port'
-          )
-          t.notOk(
-            attributes.database_name,
-            'should have no database name attribute'
-          )
+          t.equal(attributes.host, utils.getDelocalizedHostname(config.host), 'set host')
+          t.equal(attributes.port_path_or_id, String(config.port), 'set port')
+          t.notOk(attributes.database_name, 'should have no database name attribute')
           helper.agent.config.datastore_tracer.database_name_reporting.enabled = true
           txn.end()
           t.end()
@@ -223,16 +191,8 @@ module.exports = (t, requireMySQL) => {
 
           const attributes = seg.getAttributes()
 
-          t.equal(
-            attributes.host,
-            helper.agent.config.getHostnameSafe(),
-            'set host'
-          )
-          t.equal(
-            attributes.database_name,
-            params.database,
-            'set database name'
-          )
+          t.equal(attributes.host, helper.agent.config.getHostnameSafe(), 'set host')
+          t.equal(attributes.database_name, params.database, 'set database name')
           t.equal(attributes.port_path_or_id, String(defaultConfig.port), 'set port')
           txn.end()
 
@@ -257,21 +217,9 @@ module.exports = (t, requireMySQL) => {
 
           const attributes = seg.getAttributes()
 
-          t.equal(
-            attributes.host,
-            utils.getDelocalizedHostname(config.host),
-            'should set host'
-          )
-          t.equal(
-            attributes.database_name,
-            params.database,
-            'should set database name'
-          )
-          t.equal(
-            attributes.port_path_or_id,
-            '3306',
-            'should set port'
-          )
+          t.equal(attributes.host, utils.getDelocalizedHostname(config.host), 'should set host')
+          t.equal(attributes.database_name, params.database, 'should set database name')
+          t.equal(attributes.port_path_or_id, '3306', 'should set port')
           txn.end()
 
           defaultPool.end((err) => {
@@ -358,7 +306,7 @@ module.exports = (t, requireMySQL) => {
           t.transaction(txn)
           t.teardown(() => connection.release())
 
-          connection.query('SELECT ? + ? AS solution', [1,1], (err) => {
+          connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err)
             if (t.transaction(txn)) {
               var segment = helper.agent.tracer.getSegment().parent
@@ -376,11 +324,11 @@ module.exports = (t, requireMySQL) => {
     // to connect to, which only happens if there is a MySQL instance running on
     // the same box as these tests. This should always be the case on Travis,
     // but just to be sure they're running there check for the environment flag.
-    getDomainSocketPath(function(socketPath) {
+    getDomainSocketPath(function (socketPath) {
       var shouldTestDomain = socketPath || process.env.TRAVIS
       t.test(
         'ensure host and port are set on segment when using a domain socket',
-        {skip: !shouldTestDomain},
+        { skip: !shouldTestDomain },
         (t) => {
           var socketConfig = getConfig({
             socketPath: socketPath
@@ -398,21 +346,9 @@ module.exports = (t, requireMySQL) => {
 
               const attributes = seg.getAttributes()
 
-              t.equal(
-                attributes.host,
-                helper.agent.config.getHostnameSafe(),
-                'set host'
-              )
-              t.equal(
-                attributes.port_path_or_id,
-                socketPath,
-                'set path'
-              )
-              t.equal(
-                attributes.database_name,
-                params.database,
-                'set database name'
-              )
+              t.equal(attributes.host, helper.agent.config.getHostnameSafe(), 'set host')
+              t.equal(attributes.port_path_or_id, socketPath, 'set path')
+              t.equal(attributes.database_name, params.database, 'set database name')
 
               txn.end()
               socketPool.end()
@@ -426,13 +362,13 @@ module.exports = (t, requireMySQL) => {
     })
   })
 
-  t.test('poolCluster', {timeout: 30 * 1000}, (t) => {
+  t.test('poolCluster', { timeout: 30 * 1000 }, (t) => {
     t.autoend()
 
     let helper = null
     let mysql = null
 
-    t.beforeEach(async() => {
+    t.beforeEach(async () => {
       helper = utils.TestAgent.makeInstrumented()
       mysql = requireMySQL(helper)
       await setup(mysql)
@@ -456,7 +392,7 @@ module.exports = (t, requireMySQL) => {
         t.error(err, 'should not be an error')
         t.notOk(helper.getTransaction(), 'transaction should not exist')
 
-        connection.query('SELECT ? + ? AS solution', [1,1], (err) => {
+        connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
           t.error(err)
           t.notOk(helper.getTransaction(), 'transaction should not exist')
 
@@ -498,7 +434,7 @@ module.exports = (t, requireMySQL) => {
         t.error(err, 'should not have error')
 
         helper.runInTransaction((txn) => {
-          connection.query('SELECT ? + ? AS solution', [1,1], (err) => {
+          connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err, 'no error ocurred')
             if (t.transaction(txn)) {
               var segment = helper.agent.tracer.getSegment().parent
@@ -533,7 +469,6 @@ module.exports = (t, requireMySQL) => {
         })
       })
     })
-
 
     t.test('get MASTER connection', (t) => {
       var poolCluster = mysql.createPoolCluster()
@@ -589,7 +524,7 @@ module.exports = (t, requireMySQL) => {
 
       poolCluster.getConnection('REPLICA*', 'ORDER', (err, connection) => {
         helper.runInTransaction((txn) => {
-          connection.query('SELECT ? + ? AS solution', [1,1], (err) => {
+          connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err)
             if (t.transaction(txn)) {
               var segment = helper.agent.tracer.getSegment().parent
@@ -634,7 +569,7 @@ module.exports = (t, requireMySQL) => {
 
       poolCluster.of('*').getConnection((err, connection) => {
         helper.runInTransaction((txn) => {
-          connection.query('SELECT ? + ? AS solution', [1,1], (err) => {
+          connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err)
             if (t.transaction(txn)) {
               var segment = helper.agent.tracer.getSegment().parent
@@ -681,7 +616,7 @@ module.exports = (t, requireMySQL) => {
       var pool = poolCluster.of('REPLICA*', 'RANDOM')
       pool.getConnection((err, connection) => {
         helper.runInTransaction((txn) => {
-          connection.query('SELECT ? + ? AS solution', [1,1], (err) => {
+          connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err)
             if (t.transaction(txn)) {
               var segment = helper.agent.tracer.getSegment().parent

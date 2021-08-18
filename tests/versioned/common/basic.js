@@ -1,7 +1,7 @@
 /*
-* Copyright 2020 New Relic Corporation. All rights reserved.
-* SPDX-License-Identifier: Apache-2.0
-*/
+ * Copyright 2020 New Relic Corporation. All rights reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 'use strict'
 
@@ -10,26 +10,24 @@ process.env.NEW_RELIC_HOME = __dirname
 const setup = require('./setup')
 const utils = require('@newrelic/test-utilities')
 
-
 const params = setup.params
 
-
 module.exports = (t, requireMySQL) => {
-  t.test('Basic run through mysql functionality', {timeout: 30 * 1000}, (t) => {
+  t.test('Basic run through mysql functionality', { timeout: 30 * 1000 }, (t) => {
     t.autoend()
 
     let helper = null
     let mysql = null
     let pool = null
 
-    t.beforeEach(async function() {
+    t.beforeEach(async function () {
       helper = utils.TestAgent.makeInstrumented()
       mysql = requireMySQL(helper)
       pool = setup.pool(mysql)
       await setup(mysql)
     })
 
-    t.afterEach(async function() {
+    t.afterEach(async function () {
       if (!pool) {
         return
       }
@@ -44,7 +42,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     var withRetry = {
-      getClient: function(callback, counter) {
+      getClient: function (callback, counter) {
         if (!counter) {
           counter = 1
         }
@@ -56,7 +54,7 @@ module.exports = (t, requireMySQL) => {
               pool.destroy(client)
               withRetry.getClient(callback, counter)
             } else {
-              callback(new Error('Couldn\'t connect to DB after 10 attempts.'))
+              callback(new Error("Couldn't connect to DB after 10 attempts."))
             }
           } else {
             callback(null, client)
@@ -64,7 +62,7 @@ module.exports = (t, requireMySQL) => {
         })
       },
 
-      release: function(client) {
+      release: function (client) {
         pool.release(client)
       }
     }
@@ -176,21 +174,9 @@ module.exports = (t, requireMySQL) => {
 
                 t.error(err)
                 t.ok(seg, 'there is a segment')
-                t.equal(
-                  attributes.host,
-                  utils.getDelocalizedHostname(params.host),
-                  'set host'
-                )
-                t.equal(
-                  attributes.database_name,
-                  'test_db',
-                  'set database name'
-                )
-                t.equal(
-                  attributes.port_path_or_id,
-                  '3306',
-                  'set port'
-                )
+                t.equal(attributes.host, utils.getDelocalizedHostname(params.host), 'set host')
+                t.equal(attributes.database_name, 'test_db', 'set database name')
+                t.equal(attributes.port_path_or_id, '3306', 'set port')
                 withRetry.release(client)
                 txn.end()
                 checkQueries(t, helper)
@@ -201,7 +187,6 @@ module.exports = (t, requireMySQL) => {
         })
       })
     })
-
 
     t.test('streaming query should be timed correctly', function testCB(t) {
       helper.runInTransaction((txn) => {
@@ -239,15 +224,16 @@ module.exports = (t, requireMySQL) => {
             t.ok(results && ended, 'result and end events should occur')
             var traceRoot = txn.trace.root
             var traceRootDuration = traceRoot.timer.getDurationInMillis()
-            var segment = findSegment(
-              traceRoot,
-              'Datastore/statement/MySQL/unknown/select'
-            )
+            var segment = findSegment(traceRoot, 'Datastore/statement/MySQL/unknown/select')
             var queryNodeDuration = segment.timer.getDurationInMillis()
-            t.ok(Math.abs(duration - queryNodeDuration) < 50,
-                'query duration should be roughly be the time between query and end')
-            t.ok(traceRootDuration - queryNodeDuration > 900,
-                'query duration should be small compared to transaction duration')
+            t.ok(
+              Math.abs(duration - queryNodeDuration) < 50,
+              'query duration should be roughly be the time between query and end'
+            )
+            t.ok(
+              traceRootDuration - queryNodeDuration > 900,
+              'query duration should be small compared to transaction duration'
+            )
             t.end()
           }, 2000)
         })
@@ -278,19 +264,14 @@ module.exports = (t, requireMySQL) => {
               withRetry.release(client)
               var traceRoot = txn.trace.root
               var querySegment = traceRoot.children[0]
-              t.equal(
-                querySegment.children.length, 2,
-                'the query segment should have two children'
-              )
+              t.equal(querySegment.children.length, 2, 'the query segment should have two children')
 
               var childSegment = querySegment.children[1]
-              t.equal(
-                childSegment.name, 'Callback: endCallback',
-                'children should be callbacks'
-              )
+              t.equal(childSegment.name, 'Callback: endCallback', 'children should be callbacks')
               var grandChildSegment = childSegment.children[0]
               t.equal(
-                grandChildSegment.name, 'timers.setTimeout',
+                grandChildSegment.name,
+                'timers.setTimeout',
                 'grand children should be timers'
               )
               t.end()
@@ -309,7 +290,7 @@ module.exports = (t, requireMySQL) => {
           }
 
           t.transaction(txn)
-          client.query({sql: 'SELECT 1'}, (err) => {
+          client.query({ sql: 'SELECT 1' }, (err) => {
             if (!t.error(err)) {
               t.end()
               return
@@ -334,7 +315,7 @@ module.exports = (t, requireMySQL) => {
           }
 
           t.transaction(txn)
-          client.query({sql: 'SELECT 1'}, [], (err) => {
+          client.query({ sql: 'SELECT 1' }, [], (err) => {
             if (!t.error(err)) {
               t.end()
               return
