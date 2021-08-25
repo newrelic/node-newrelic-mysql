@@ -5,11 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run versioned",
+    "third-party-updates": "oss third-party manifest && oss third-party notices && git add THIRD_PARTY_NOTICES.md third_party_manifest.json",
     "versioned": "npm run versioned:npm6",
     "versioned:npm6": "versioned-tests --minor -i 2 'tests/versioned/**/*.tap.js'",
     "versioned:npm7": "versioned-tests --minor --all -i 2 'tests/versioned/**/*.tap.js'",
     "lint": "eslint *.js lib tests",
-    "lint:fix": "eslint --fix *.js lib tests"
+    "lint:fix": "eslint --fix *.js lib tests",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -31,7 +33,8 @@
     "node": ">=12.0.0"
   },
   "devDependencies": {
-    "@newrelic/eslint-config": "^0.0.1",
+    "@newrelic/eslint-config": "^0.0.2",
+    "@newrelic/newrelic-oss-cli": "^0.1.2",
     "@newrelic/test-utilities": "^5.1.0",
     "async": "^3.2.0",
     "eslint": "^7.32.0",
@@ -40,6 +43,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.4.0",
     "generic-pool": "^2.5.4",
+    "husky": "^7.0.2",
+    "lint-staged": "^11.1.2",
     "mysql": "^2.17.1",
     "mysql2": "^1.7.0",
     "newrelic": "^8.1.0",
