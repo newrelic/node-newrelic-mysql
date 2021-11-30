@@ -40,6 +40,7 @@ module.exports = (t, requireMySQL) => {
     t.autoend()
 
     let helper = utils.TestAgent.makeInstrumented()
+
     var mysql = requireMySQL(helper)
     var badConfig = {
       connectionLimit: 10,
@@ -84,9 +85,11 @@ module.exports = (t, requireMySQL) => {
     var helper = null
     var mysql = null
     var pool = null
+    let contextManager = null
 
     t.beforeEach(async () => {
       helper = utils.TestAgent.makeInstrumented()
+      contextManager = helper.getContextManager()
       mysql = requireMySQL(helper)
       pool = mysql.createPool(config)
       await setup(mysql)
@@ -138,7 +141,8 @@ module.exports = (t, requireMySQL) => {
       helper.runInTransaction((txn) => {
         helper.agent.config.datastore_tracer.instance_reporting.enabled = false
         pool.query('SELECT 1 + 1 AS solution', (err) => {
-          var seg = getDatastoreSegment(helper.agent.tracer.getSegment())
+          const currentSegment = contextManager.getContext()
+          var seg = getDatastoreSegment(currentSegment)
           t.error(err, 'should not error making query')
           t.ok(seg, 'should have a segment')
 
@@ -158,7 +162,8 @@ module.exports = (t, requireMySQL) => {
       helper.runInTransaction((txn) => {
         helper.agent.config.datastore_tracer.database_name_reporting.enabled = false
         pool.query('SELECT 1 + 1 AS solution', (err) => {
-          var seg = getDatastoreSegment(helper.agent.tracer.getSegment())
+          const currentSegment = contextManager.getContext()
+          var seg = getDatastoreSegment(currentSegment)
           t.notOk(err, 'no errors')
           t.ok(seg, 'there is a segment')
 
@@ -186,7 +191,8 @@ module.exports = (t, requireMySQL) => {
           // In the case where you don't have a server running on
           // localhost the data will still be correctly associated
           // with the query.
-          var seg = getDatastoreSegment(helper.agent.tracer.getSegment())
+          const currentSegment = contextManager.getContext()
+          var seg = getDatastoreSegment(currentSegment)
           t.ok(seg, 'there is a segment')
 
           const attributes = seg.getAttributes()
@@ -210,7 +216,8 @@ module.exports = (t, requireMySQL) => {
       var defaultPool = mysql.createPool(defaultConfig)
       helper.runInTransaction((txn) => {
         defaultPool.query('SELECT 1 + 1 AS solution', (err) => {
-          var seg = getDatastoreSegment(helper.agent.tracer.getSegment())
+          const currentSegment = contextManager.getContext()
+          var seg = getDatastoreSegment(currentSegment)
 
           t.error(err, 'should not error making query')
           t.ok(seg, 'should have a segment')
@@ -253,7 +260,7 @@ module.exports = (t, requireMySQL) => {
     t.test('pool.query', (t) => {
       helper.runInTransaction((txn) => {
         pool.query('SELECT 1 + 1 AS solution123123123123', (err) => {
-          var segment = helper.agent.tracer.getSegment().parent
+          const segment = getParentSegment(contextManager)
 
           t.error(err, 'should not error')
           t.transaction(txn)
@@ -269,7 +276,7 @@ module.exports = (t, requireMySQL) => {
         pool.query('SELECT ? + ? AS solution', [1, 1], (err) => {
           t.error(err)
           if (t.transaction(txn)) {
-            var segment = helper.agent.tracer.getSegment().parent
+            const segment = getParentSegment(contextManager)
             checkSegment(t, segment, 'MySQL Pool#query')
           }
 
@@ -287,7 +294,7 @@ module.exports = (t, requireMySQL) => {
           t.teardown(() => connection.release())
 
           connection.query('SELECT 1 + 1 AS solution', (err) => {
-            var segment = helper.agent.tracer.getSegment().parent
+            const segment = getParentSegment(contextManager)
 
             t.error(err, 'no error ocurred')
             t.transaction(txn)
@@ -309,7 +316,7 @@ module.exports = (t, requireMySQL) => {
           connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err)
             if (t.transaction(txn)) {
-              var segment = helper.agent.tracer.getSegment().parent
+              const segment = getParentSegment(contextManager)
               checkSegment(t, segment)
             }
 
@@ -338,7 +345,8 @@ module.exports = (t, requireMySQL) => {
             socketPool.query('SELECT 1 + 1 AS solution', (err) => {
               t.error(err, 'should not error making query')
 
-              var seg = getDatastoreSegment(helper.agent.tracer.getSegment())
+              const currentSegment = contextManager.getContext()
+              var seg = getDatastoreSegment(currentSegment)
 
               // In the case where you don't have a server running on localhost
               // the data will still be correctly associated with the query.
@@ -366,10 +374,12 @@ module.exports = (t, requireMySQL) => {
     t.autoend()
 
     let helper = null
+    let contextManager = null
     let mysql = null
 
     t.beforeEach(async () => {
       helper = utils.TestAgent.makeInstrumented()
+      contextManager = helper.getContextManager()
       mysql = requireMySQL(helper)
       await setup(mysql)
     })
@@ -437,7 +447,7 @@ module.exports = (t, requireMySQL) => {
           connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err, 'no error ocurred')
             if (t.transaction(txn)) {
-              var segment = helper.agent.tracer.getSegment().parent
+              const segment = getParentSegment(contextManager)
               checkSegment(t, segment)
             }
 
@@ -482,7 +492,7 @@ module.exports = (t, requireMySQL) => {
           connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err)
             if (t.transaction(txn)) {
-              var segment = helper.agent.tracer.getSegment().parent
+              const segment = getParentSegment(contextManager)
               checkSegment(t, segment)
             }
 
@@ -527,7 +537,7 @@ module.exports = (t, requireMySQL) => {
           connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err)
             if (t.transaction(txn)) {
-              var segment = helper.agent.tracer.getSegment().parent
+              const segment = getParentSegment(contextManager)
               checkSegment(t, segment)
             }
 
@@ -572,7 +582,7 @@ module.exports = (t, requireMySQL) => {
           connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err)
             if (t.transaction(txn)) {
-              var segment = helper.agent.tracer.getSegment().parent
+              const segment = getParentSegment(contextManager)
               checkSegment(t, segment)
             }
 
@@ -619,7 +629,7 @@ module.exports = (t, requireMySQL) => {
           connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
             t.error(err)
             if (t.transaction(txn)) {
-              var segment = helper.agent.tracer.getSegment().parent
+              const segment = getParentSegment(contextManager)
               checkSegment(t, segment)
             }
 
@@ -659,4 +669,11 @@ function checkSegment(t, segment, name) {
   t.ok(segment.timer.start > 0, 'should start at a postitive time')
   t.ok(segment.timer.start <= Date.now(), 'should start in past')
   t.equal(segment.name, name, 'should be named')
+}
+
+function getParentSegment(contextManager) {
+  const currentSegment = contextManager.getContext()
+  const parentSegment = currentSegment && currentSegment.parent
+
+  return parentSegment
 }
