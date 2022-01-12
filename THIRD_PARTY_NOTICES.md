@@ -460,7 +460,7 @@ This product includes source derived from [@newrelic/newrelic-oss-cli](https://g
 
 ### @newrelic/test-utilities
 
-This product includes source derived from [@newrelic/test-utilities](https://github.com/newrelic/node-test-utilities) ([v5.1.0](https://github.com/newrelic/node-test-utilities/tree/v5.1.0)), distributed under the [Apache-2.0 License](https://github.com/newrelic/node-test-utilities/blob/v5.1.0/LICENSE):
+This product includes source derived from [@newrelic/test-utilities](https://github.com/newrelic/node-test-utilities) ([v6.3.0](https://github.com/newrelic/node-test-utilities/tree/v6.3.0)), distributed under the [Apache-2.0 License](https://github.com/newrelic/node-test-utilities/blob/v6.3.0/LICENSE):
 
 ```
                                  Apache License
@@ -958,7 +958,7 @@ Copyright (c) 2012 Felix Geisendörfer (felix@debuggable.com) and contributors
 
 ### newrelic
 
-This product includes source derived from [newrelic](https://github.com/newrelic/node-newrelic) ([v8.1.0](https://github.com/newrelic/node-newrelic/tree/v8.1.0)), distributed under the [Apache-2.0 License](https://github.com/newrelic/node-newrelic/blob/v8.1.0/LICENSE):
+This product includes source derived from [newrelic](https://github.com/newrelic/node-newrelic) ([v8.7.0](https://github.com/newrelic/node-newrelic/tree/v8.7.0)), distributed under the [Apache-2.0 License](https://github.com/newrelic/node-newrelic/blob/v8.7.0/LICENSE):
 
 ```
                                  Apache License

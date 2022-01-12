@@ -17,11 +17,13 @@ module.exports = (t, requireMySQL) => {
     t.autoend()
 
     let helper = null
+    let contextManager = null
     let mysql = null
     let pool = null
 
     t.beforeEach(async function () {
       helper = utils.TestAgent.makeInstrumented()
+      contextManager = helper.getContextManager()
       mysql = requireMySQL(helper)
       pool = setup.pool(mysql)
       await setup(mysql)
@@ -168,7 +170,8 @@ module.exports = (t, requireMySQL) => {
               t.error(err, 'should not fail to set database')
 
               client.query('SELECT 1 + 1 AS solution', (err) => {
-                var seg = helper.agent.tracer.getSegment().parent
+                const currentSegment = contextManager.getContext()
+                var seg = currentSegment && currentSegment.parent
 
                 const attributes = seg.getAttributes()
 
