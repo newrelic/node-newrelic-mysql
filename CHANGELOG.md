@@ -1,3 +1,13 @@
+### v5.1.1 (2022-02-07)
+
+* Updated `add-to-board` to use org level `NODE_AGENT_GH_TOKEN`
+
+* Removed usages of internal tracer from tests.
+
+* Bumped `newrelic` dev dependency to ^8.6.0.
+
+* Bumped `@newrelic/test-utilities` to ^6.3.0.
+
 ### v5.1.0 (2022-01-11)
 
 * Added workflow to automate preparing release notes by reusing the newrelic/node-newrelic/.github/workflows/prep-release.yml@main workflow from agent repository.
