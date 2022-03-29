@@ -1,20 +1,20 @@
 {
-  "lastUpdated": "Fri Feb 11 2022 15:38:24 GMT-0800 (Pacific Standard Time)",
+  "lastUpdated": "Tue Mar 29 2022 13:18:46 GMT-0400 (Eastern Daylight Time)",
   "projectName": "New Relic MySql Instrumentation",
   "projectUrl": "https://github.com/newrelic/node-newrelic-mysql",
   "includeOptDeps": false,
   "includeDev": true,
   "dependencies": {},
   "devDependencies": {
-    "@newrelic/eslint-config@0.0.2": {
+    "@newrelic/eslint-config@0.0.4": {
       "name": "@newrelic/eslint-config",
-      "version": "0.0.2",
-      "range": "^0.0.2",
+      "version": "0.0.4",
+      "range": "^0.0.4",
       "licenses": "Apache-2.0",
       "repoUrl": "https://github.com/newrelic/eslint-config-newrelic",
-      "versionedRepoUrl": "https://github.com/newrelic/eslint-config-newrelic/tree/v0.0.2",
+      "versionedRepoUrl": "https://github.com/newrelic/eslint-config-newrelic/tree/v0.0.4",
       "licenseFile": "node_modules/@newrelic/eslint-config/LICENSE",
-      "licenseUrl": "https://github.com/newrelic/eslint-config-newrelic/blob/v0.0.2/LICENSE",
+      "licenseUrl": "https://github.com/newrelic/eslint-config-newrelic/blob/v0.0.4/LICENSE",
       "licenseTextSource": "file",
       "publisher": "New Relic Node.js agent team",
       "email": "nodejs@newrelic.com"
