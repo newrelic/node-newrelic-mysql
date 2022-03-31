@@ -31,7 +31,7 @@ tap.test('mysql2 promises', { timeout: 30000 }, (t) => {
     // Stub the normal mysql2 instrumentation to avoid it hiding issues with the
     // promise instrumentation.
     helper.registerInstrumentation({
-      moduleName: 'mysql2',
+      moduleName: 'mysql',
       type: 'datastore',
       onRequire: () => {}
     })
@@ -129,7 +129,7 @@ tap.test('mysql2 promises', { timeout: 30000 }, (t) => {
 function checkQueries(t, helper) {
   const querySamples = helper.agent.queries.samples
   t.ok(querySamples.size > 0, 'there should be a query sample')
-  for (let sample of querySamples.values()) {
+  for (const sample of querySamples.values()) {
     t.ok(sample.total > 0, 'the samples should have positive duration')
   }
 }

@@ -10,17 +10,7 @@ const utils = require('@newrelic/test-utilities')
 
 utils(tap)
 
-tap.test('mysql transactions', (t) => {
+tap.test('mysql2 transactions', (t) => {
   t.autoend()
-  require('../common/transactions')(t, (helper) => {
-    if (helper) {
-      helper.registerInstrumentation({
-        moduleName: 'mysql2',
-        type: 'datastore',
-        onRequire: require('../../../lib/instrumentation').callbackInitialize
-      })
-    }
-
-    return require('mysql2')
-  })
+  require('../common/transactions')(t, () => require('mysql2'))
 })

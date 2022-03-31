@@ -12,15 +12,5 @@ utils(tap)
 
 tap.test('mysql pooling', (t) => {
   t.autoend()
-  require('../common/pooling')(t, (helper) => {
-    if (helper) {
-      helper.registerInstrumentation({
-        moduleName: 'mysql',
-        type: 'datastore',
-        onRequire: require('../../../lib/instrumentation').callbackInitialize
-      })
-    }
-
-    return require('mysql')
-  })
+  require('../common/pooling')(t, () => require('mysql'))
 })

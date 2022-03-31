@@ -19,7 +19,12 @@ module.exports = (t, requireMySQL) => {
     t.beforeEach(async function () {
       // set up the instrumentation before loading MySQL
       helper = utils.TestAgent.makeInstrumented()
-      mysql = requireMySQL(helper)
+      helper.registerInstrumentation({
+        moduleName: 'mysql',
+        type: 'datastore',
+        onRequire: require('../../../lib/instrumentation').callbackInitialize
+      })
+      mysql = requireMySQL()
       await setup(mysql)
     })
 

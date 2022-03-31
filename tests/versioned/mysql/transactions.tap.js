@@ -12,15 +12,5 @@ utils(tap)
 
 tap.test('mysql transactions', (t) => {
   t.autoend()
-  require('../common/transactions')(t, (helper) => {
-    if (helper) {
-      helper.registerInstrumentation({
-        moduleName: 'mysql',
-        type: 'datastore',
-        onRequire: require('../../../lib/instrumentation').callbackInitialize
-      })
-    }
-
-    return require('mysql')
-  })
+  require('../common/transactions')(t, () => require('mysql'))
 })

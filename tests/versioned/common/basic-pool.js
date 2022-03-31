@@ -12,9 +12,9 @@ const utils = require('@newrelic/test-utilities')
 
 const params = setup.params
 
-var config = getConfig({})
+const config = getConfig({})
 function getConfig(extras) {
-  var conf = {
+  const conf = {
     connectionLimit: 10,
     host: params.host,
     port: params.port,
@@ -23,7 +23,7 @@ function getConfig(extras) {
   }
 
   // eslint-disable-next-line guard-for-in
-  for (var key in extras) {
+  for (const key in extras) {
     conf[key] = extras[key]
   }
 
@@ -39,10 +39,15 @@ module.exports = (t, requireMySQL) => {
   t.test('bad config', (t) => {
     t.autoend()
 
-    let helper = utils.TestAgent.makeInstrumented()
+    const helper = utils.TestAgent.makeInstrumented()
 
-    var mysql = requireMySQL(helper)
-    var badConfig = {
+    helper.registerInstrumentation({
+      moduleName: 'mysql',
+      type: 'datastore',
+      onRequire: require('../../../lib/instrumentation').callbackInitialize
+    })
+    const mysql = requireMySQL()
+    const badConfig = {
       connectionLimit: 10,
       host: 'nohost',
       user: params.user,
@@ -54,7 +59,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test((t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
       t.teardown(() => poolCluster.end())
 
       poolCluster.add(badConfig) // anonymous group
@@ -62,8 +67,8 @@ module.exports = (t, requireMySQL) => {
         // umm... so this test is pretty hacky, but i want to make sure we don't
         // wrap the callback multiple times.
 
-        var stack = new Error().stack
-        var frames = stack.split('\n').slice(3, 8)
+        const stack = new Error().stack
+        const frames = stack.split('\n').slice(3, 8)
 
         t.not(frames[0], frames[1], 'do not multi-wrap')
         t.not(frames[0], frames[2], 'do not multi-wrap')
@@ -82,15 +87,20 @@ module.exports = (t, requireMySQL) => {
   // TODO: test notice errors
   // TODO: test sql capture
   t.test('mysql built-in connection pools', { timeout: 30 * 1000 }, (t) => {
-    var helper = null
-    var mysql = null
-    var pool = null
+    let helper = null
+    let mysql = null
+    let pool = null
     let contextManager = null
 
     t.beforeEach(async () => {
       helper = utils.TestAgent.makeInstrumented()
       contextManager = helper.getContextManager()
-      mysql = requireMySQL(helper)
+      helper.registerInstrumentation({
+        moduleName: 'mysql',
+        type: 'datastore',
+        onRequire: require('../../../lib/instrumentation').callbackInitialize
+      })
+      mysql = requireMySQL()
       pool = mysql.createPool(config)
       await setup(mysql)
     })
@@ -142,7 +152,7 @@ module.exports = (t, requireMySQL) => {
         helper.agent.config.datastore_tracer.instance_reporting.enabled = false
         pool.query('SELECT 1 + 1 AS solution', (err) => {
           const currentSegment = contextManager.getContext()
-          var seg = getDatastoreSegment(currentSegment)
+          const seg = getDatastoreSegment(currentSegment)
           t.error(err, 'should not error making query')
           t.ok(seg, 'should have a segment')
 
@@ -163,7 +173,7 @@ module.exports = (t, requireMySQL) => {
         helper.agent.config.datastore_tracer.database_name_reporting.enabled = false
         pool.query('SELECT 1 + 1 AS solution', (err) => {
           const currentSegment = contextManager.getContext()
-          var seg = getDatastoreSegment(currentSegment)
+          const seg = getDatastoreSegment(currentSegment)
           t.notOk(err, 'no errors')
           t.ok(seg, 'there is a segment')
 
@@ -180,10 +190,10 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('ensure host is the default (localhost) when not supplied', (t) => {
-      var defaultConfig = getConfig({
+      const defaultConfig = getConfig({
         host: null
       })
-      var defaultPool = mysql.createPool(defaultConfig)
+      const defaultPool = mysql.createPool(defaultConfig)
       helper.runInTransaction((txn) => {
         defaultPool.query('SELECT 1 + 1 AS solution', (err) => {
           t.error(err, 'should not fail to execute query')
@@ -192,7 +202,7 @@ module.exports = (t, requireMySQL) => {
           // localhost the data will still be correctly associated
           // with the query.
           const currentSegment = contextManager.getContext()
-          var seg = getDatastoreSegment(currentSegment)
+          const seg = getDatastoreSegment(currentSegment)
           t.ok(seg, 'there is a segment')
 
           const attributes = seg.getAttributes()
@@ -210,14 +220,14 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('ensure port is the default (3306) when not supplied', (t) => {
-      var defaultConfig = getConfig({
+      const defaultConfig = getConfig({
         host: null
       })
-      var defaultPool = mysql.createPool(defaultConfig)
+      const defaultPool = mysql.createPool(defaultConfig)
       helper.runInTransaction((txn) => {
         defaultPool.query('SELECT 1 + 1 AS solution', (err) => {
           const currentSegment = contextManager.getContext()
-          var seg = getDatastoreSegment(currentSegment)
+          const seg = getDatastoreSegment(currentSegment)
 
           t.error(err, 'should not error making query')
           t.ok(seg, 'should have a segment')
@@ -332,21 +342,21 @@ module.exports = (t, requireMySQL) => {
     // the same box as these tests. This should always be the case on Travis,
     // but just to be sure they're running there check for the environment flag.
     getDomainSocketPath(function (socketPath) {
-      var shouldTestDomain = socketPath || process.env.TRAVIS
+      const shouldTestDomain = socketPath || process.env.TRAVIS
       t.test(
         'ensure host and port are set on segment when using a domain socket',
         { skip: !shouldTestDomain },
         (t) => {
-          var socketConfig = getConfig({
+          const socketConfig = getConfig({
             socketPath: socketPath
           })
-          var socketPool = mysql.createPool(socketConfig)
+          const socketPool = mysql.createPool(socketConfig)
           helper.runInTransaction((txn) => {
             socketPool.query('SELECT 1 + 1 AS solution', (err) => {
               t.error(err, 'should not error making query')
 
               const currentSegment = contextManager.getContext()
-              var seg = getDatastoreSegment(currentSegment)
+              const seg = getDatastoreSegment(currentSegment)
 
               // In the case where you don't have a server running on localhost
               // the data will still be correctly associated with the query.
@@ -380,7 +390,12 @@ module.exports = (t, requireMySQL) => {
     t.beforeEach(async () => {
       helper = utils.TestAgent.makeInstrumented()
       contextManager = helper.getContextManager()
-      mysql = requireMySQL(helper)
+      helper.registerInstrumentation({
+        moduleName: 'mysql',
+        type: 'datastore',
+        onRequire: require('../../../lib/instrumentation').callbackInitialize
+      })
+      mysql = requireMySQL()
       await setup(mysql)
     })
 
@@ -392,7 +407,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('primer', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
@@ -414,7 +429,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get any connection', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
@@ -434,7 +449,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get any connection', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
@@ -461,7 +476,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get MASTER connection', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
@@ -481,7 +496,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get MASTER connection', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
@@ -506,7 +521,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get glob', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
@@ -526,7 +541,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get glob', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
@@ -551,7 +566,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get star', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
@@ -571,7 +586,7 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get star', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
@@ -596,14 +611,14 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get wildcard', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
       poolCluster.add('REPLICA', config)
 
       helper.runInTransaction((txn) => {
-        var pool = poolCluster.of('REPLICA*', 'RANDOM')
+        const pool = poolCluster.of('REPLICA*', 'RANDOM')
         pool.getConnection((err, connection) => {
           t.error(err)
           t.transaction(txn)
@@ -617,13 +632,13 @@ module.exports = (t, requireMySQL) => {
     })
 
     t.test('get wildcard', (t) => {
-      var poolCluster = mysql.createPoolCluster()
+      const poolCluster = mysql.createPoolCluster()
 
       poolCluster.add(config) // anonymous group
       poolCluster.add('MASTER', config)
       poolCluster.add('REPLICA', config)
 
-      var pool = poolCluster.of('REPLICA*', 'RANDOM')
+      const pool = poolCluster.of('REPLICA*', 'RANDOM')
       pool.getConnection((err, connection) => {
         helper.runInTransaction((txn) => {
           connection.query('SELECT ? + ? AS solution', [1, 1], (err) => {
@@ -651,7 +666,7 @@ function getDomainSocketPath(callback) {
       return
     }
 
-    var sock = stdout.toString().trim()
+    const sock = stdout.toString().trim()
     fs.access(sock, (err) => {
       callback(err ? null : sock)
     })
