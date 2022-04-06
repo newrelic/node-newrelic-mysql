@@ -13,6 +13,9 @@
 const newrelic = require('newrelic')
 const instrumentation = require('./lib/instrumentation')
 
+/** We only need to register the instrumentation once for both mysql and mysql2
+ *  because there is some 🪄 in shimmer
+ * See: https://github.com/newrelic/node-newrelic/blob/main/lib/shimmer.js#L459
+ */
 newrelic.instrumentDatastore('mysql', instrumentation.callbackInitialize)
-newrelic.instrumentDatastore('mysql2', instrumentation.callbackInitialize)
 newrelic.instrumentDatastore('mysql2/promise', instrumentation.promiseInitialize)

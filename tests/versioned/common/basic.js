@@ -12,8 +12,8 @@ const utils = require('@newrelic/test-utilities')
 
 const params = setup.params
 
-module.exports = (t, requireMySQL) => {
-  t.test('Basic run through mysql functionality', { timeout: 30 * 1000 }, (t) => {
+module.exports = (t, pkgName, requireMySQL) => {
+  t.test(`Basic run through ${pkgName} functionality`, { timeout: 30 * 1000 }, (t) => {
     t.autoend()
 
     let helper = null
@@ -24,7 +24,12 @@ module.exports = (t, requireMySQL) => {
     t.beforeEach(async function () {
       helper = utils.TestAgent.makeInstrumented()
       contextManager = helper.getContextManager()
-      mysql = requireMySQL(helper)
+      helper.registerInstrumentation({
+        moduleName: 'mysql',
+        type: 'datastore',
+        onRequire: require('../../../lib/instrumentation').callbackInitialize
+      })
+      mysql = requireMySQL()
       pool = setup.pool(mysql)
       await setup(mysql)
     })
@@ -43,7 +48,7 @@ module.exports = (t, requireMySQL) => {
       })
     })
 
-    var withRetry = {
+    const withRetry = {
       getClient: function (callback, counter) {
         if (!counter) {
           counter = 1
@@ -130,8 +135,8 @@ module.exports = (t, requireMySQL) => {
           }
 
           t.transaction(txn)
-          var query = client.query('SELECT 1', [])
-          var results = false
+          const query = client.query('SELECT 1', [])
+          let results = false
 
           query.on('result', () => {
             results = true
@@ -171,7 +176,7 @@ module.exports = (t, requireMySQL) => {
 
               client.query('SELECT 1 + 1 AS solution', (err) => {
                 const currentSegment = contextManager.getContext()
-                var seg = currentSegment && currentSegment.parent
+                const seg = currentSegment && currentSegment.parent
 
                 const attributes = seg.getAttributes()
 
@@ -191,6 +196,29 @@ module.exports = (t, requireMySQL) => {
       })
     })
 
+    t.test(
+      'query via execute() should be instrumented',
+      { skip: pkgName === 'mysql' },
+      function testTransaction(t) {
+        helper.runInTransaction((txn) => {
+          withRetry.getClient((err, client) => {
+            t.error(err)
+
+            t.transaction(txn)
+            client.execute('SELECT 1', function (err) {
+              t.error(err)
+
+              t.transaction(txn)
+              withRetry.release(client)
+              txn.end()
+              checkQueries(t, helper)
+              t.end()
+            })
+          })
+        })
+      }
+    )
+
     t.test('streaming query should be timed correctly', function testCB(t) {
       helper.runInTransaction((txn) => {
         withRetry.getClient((err, client) => {
@@ -200,11 +228,11 @@ module.exports = (t, requireMySQL) => {
           }
 
           t.transaction(txn)
-          var query = client.query('SELECT SLEEP(1)', [])
-          var start = Date.now()
-          var duration = null
-          var results = false
-          var ended = false
+          const query = client.query('SELECT SLEEP(1)', [])
+          const start = Date.now()
+          let duration = null
+          let results = false
+          let ended = false
 
           query.on('result', () => {
             results = true
@@ -225,10 +253,10 @@ module.exports = (t, requireMySQL) => {
 
             withRetry.release(client)
             t.ok(results && ended, 'result and end events should occur')
-            var traceRoot = txn.trace.root
-            var traceRootDuration = traceRoot.timer.getDurationInMillis()
-            var segment = findSegment(traceRoot, 'Datastore/statement/MySQL/unknown/select')
-            var queryNodeDuration = segment.timer.getDurationInMillis()
+            const traceRoot = txn.trace.root
+            const traceRootDuration = traceRoot.timer.getDurationInMillis()
+            const segment = findSegment(traceRoot, 'Datastore/statement/MySQL/unknown/select')
+            const queryNodeDuration = segment.timer.getDurationInMillis()
             t.ok(
               Math.abs(duration - queryNodeDuration) < 50,
               'query duration should be roughly be the time between query and end'
@@ -252,7 +280,7 @@ module.exports = (t, requireMySQL) => {
           }
 
           t.transaction(txn)
-          var query = client.query('SELECT 1', [])
+          const query = client.query('SELECT 1', [])
 
           query.on('result', () => setTimeout(() => {}, 10))
 
@@ -265,13 +293,13 @@ module.exports = (t, requireMySQL) => {
             setTimeout(() => {
               txn.end()
               withRetry.release(client)
-              var traceRoot = txn.trace.root
-              var querySegment = traceRoot.children[0]
+              const traceRoot = txn.trace.root
+              const querySegment = traceRoot.children[0]
               t.equal(querySegment.children.length, 2, 'the query segment should have two children')
 
-              var childSegment = querySegment.children[1]
+              const childSegment = querySegment.children[1]
               t.equal(childSegment.name, 'Callback: endCallback', 'children should be callbacks')
-              var grandChildSegment = childSegment.children[0]
+              const grandChildSegment = childSegment.children[0]
               t.equal(
                 grandChildSegment.name,
                 'timers.setTimeout',
@@ -337,8 +365,8 @@ module.exports = (t, requireMySQL) => {
 }
 
 function findSegment(root, segmentName) {
-  for (var i = 0; i < root.children.length; i++) {
-    var segment = root.children[i]
+  for (let i = 0; i < root.children.length; i++) {
+    const segment = root.children[i]
     if (segment.name === segmentName) {
       return segment
     }
@@ -349,7 +377,7 @@ function findSegment(root, segmentName) {
 function checkQueries(t, helper) {
   const querySamples = helper.agent.queries.samples
   t.ok(querySamples.size > 0, 'there should be a query sample')
-  for (let sample of querySamples.values()) {
+  for (const sample of querySamples.values()) {
     t.ok(sample.total > 0, 'the samples should have positive duration')
   }
 }

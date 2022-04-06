@@ -10,17 +10,7 @@ const utils = require('@newrelic/test-utilities')
 
 utils(tap)
 
-tap.test('mysql basic pool', (t) => {
+tap.test('mysql2 basic pool', (t) => {
   t.autoend()
-  require('../common/basic-pool')(t, (helper) => {
-    if (helper) {
-      helper.registerInstrumentation({
-        moduleName: 'mysql2',
-        type: 'datastore',
-        onRequire: require('../../../lib/instrumentation').callbackInitialize
-      })
-    }
-
-    return require('mysql2')
-  })
+  require('../common/basic-pool')(t, () => require('mysql2'))
 })

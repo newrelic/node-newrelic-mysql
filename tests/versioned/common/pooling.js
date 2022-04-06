@@ -17,7 +17,12 @@ module.exports = (t, requireMySQL) => {
 
     t.beforeEach(async function () {
       helper = utils.TestAgent.makeInstrumented()
-      mysql = requireMySQL(helper)
+      helper.registerInstrumentation({
+        moduleName: 'mysql',
+        type: 'datastore',
+        onRequire: require('../../../lib/instrumentation').callbackInitialize
+      })
+      mysql = requireMySQL()
       pool = setup.pool(mysql)
       await setup(mysql)
     })
@@ -68,7 +73,7 @@ module.exports = (t, requireMySQL) => {
             return
           }
 
-          var query = `SELECT * FROM ${setup.params.database}.test WHERE id = ?`
+          const query = `SELECT * FROM ${setup.params.database}.test WHERE id = ?`
           client.query(query, [params.id], (err, results) => {
             withRetry.release(client) // always release back to the pool
 
@@ -86,7 +91,7 @@ module.exports = (t, requireMySQL) => {
     t.test('basic transaction', (t) => {
       t.notOk(helper.getTransaction(), 'no transaction should be in play yet')
       helper.runInTransaction((txn) => {
-        var context = {
+        const context = {
           id: 1
         }
         dal.lookup(context, (error, row) => {
@@ -113,13 +118,13 @@ module.exports = (t, requireMySQL) => {
 
             txn.end()
 
-            var trace = txn.trace
+            const trace = txn.trace
             t.ok(trace, 'trace should exist')
             t.ok(trace.root, 'root element should exist.')
 
             t.ok(trace.root.children.length < 3, 'should have one or two children')
 
-            var selectSegment = trace.root.children[trace.root.children.length - 1]
+            const selectSegment = trace.root.children[trace.root.children.length - 1]
             t.ok(selectSegment, 'trace segment for first SELECT should exist')
             t.equal(
               selectSegment.name,
