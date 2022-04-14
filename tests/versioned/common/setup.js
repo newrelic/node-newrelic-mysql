@@ -5,8 +5,6 @@
 
 'use strict'
 
-const async = require('async')
-
 module.exports = exports = setup
 exports.pool = setupPool
 const params = (exports.params = {
@@ -35,37 +33,29 @@ async function setupDb(mysql) {
     database: 'mysql'
   })
 
-  await async.eachSeries(
-    [
-      `CREATE USER If NOT EXISTS ${params.user}`,
-      `GRANT ALL ON *.* TO ${params.user}`,
-      `CREATE DATABASE IF NOT EXISTS ${params.database}`
-    ],
-    async (sql) => {
-      await executeDb(client, sql)
-    }
-  )
+  await executeDb(client, `CREATE USER If NOT EXISTS ${params.user}`)
+  await executeDb(client, `GRANT ALL ON *.* TO ${params.user}`)
+  await executeDb(client, `CREATE DATABASE IF NOT EXISTS ${params.database}`)
+
   client.end()
 }
 
 async function setupTable(mysql) {
   const client = mysql.createConnection(params)
 
-  await async.eachSeries(
+  await executeDb(
+    client,
     [
-      [
-        'CREATE TABLE IF NOT EXISTS `test` (',
-        '  `id`         INTEGER(10) PRIMARY KEY AUTO_INCREMENT,',
-        '  `test_value` VARCHAR(255)',
-        ')'
-      ].join('\n'),
-      'TRUNCATE TABLE `test`',
-      'INSERT INTO `test` (`test_value`) VALUE ("hamburgefontstiv")'
-    ],
-    async (sql) => {
-      await executeDb(client, sql)
-    }
+      'CREATE TABLE IF NOT EXISTS `test` (',
+      '  `id`         INTEGER(10) PRIMARY KEY AUTO_INCREMENT,',
+      '  `test_value` VARCHAR(255)',
+      ')'
+    ].join('\n')
   )
+
+  await executeDb(client, 'TRUNCATE TABLE `test`')
+  await executeDb(client, 'INSERT INTO `test` (`test_value`) VALUE ("hamburgefontstiv")')
+
   client.end()
 }
 

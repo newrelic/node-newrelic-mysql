@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "Mon Apr 11 2022 12:21:04 GMT-0700 (Pacific Daylight Time)",
+  "lastUpdated": "Thu Apr 14 2022 12:57:14 GMT-0700 (Pacific Daylight Time)",
   "projectName": "New Relic MySql Instrumentation",
   "projectUrl": "https://github.com/newrelic/node-newrelic-mysql",
   "includeOptDeps": false,
@@ -43,18 +43,6 @@
       "licenseTextSource": "file",
       "publisher": "New Relic Node.js agent team",
       "email": "nodejs@newrelic.com"
-    },
-    "async@3.2.0": {
-      "name": "async",
-      "version": "3.2.0",
-      "range": "^3.2.0",
-      "licenses": "MIT",
-      "repoUrl": "https://github.com/caolan/async",
-      "versionedRepoUrl": "https://github.com/caolan/async/tree/v3.2.0",
-      "licenseFile": "node_modules/async/LICENSE",
-      "licenseUrl": "https://github.com/caolan/async/blob/v3.2.0/LICENSE",
-      "licenseTextSource": "file",
-      "publisher": "Caolan McMahon"
     },
     "eslint-config-prettier@8.3.0": {
       "name": "eslint-config-prettier",
