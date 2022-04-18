@@ -1,3 +1,15 @@
+### v5.2.0 (2022-04-18)
+
+* Added support for `mysql2` `client.execute`.
+
+* Fixed `mysql2` versioned tests to use local instrumentation vs agent instrumentation.
+
+* Removed usage of `async` module.
+
+* Bumped tap to ^16.0.1.
+
+* Resolved dev-only audit warnings: moment, ansi-regex, and tap.
+
 ### v5.1.1 (2022-02-07)
 
 * Updated `add-to-board` to use org level `NODE_AGENT_GH_TOKEN`
