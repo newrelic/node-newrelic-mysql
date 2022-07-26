@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "Tue Jul 26 2022 11:30:28 GMT-0400 (Eastern Daylight Time)",
+  "lastUpdated": "Tue Jul 26 2022 15:18:12 GMT-0400 (Eastern Daylight Time)",
   "projectName": "New Relic MySql Instrumentation",
   "projectUrl": "https://github.com/newrelic/node-newrelic-mysql",
   "includeOptDeps": false,
@@ -171,15 +171,15 @@
       "email": "felix@debuggable.com",
       "url": "http://debuggable.com/"
     },
-    "newrelic@8.15.0": {
+    "newrelic@8.7.0": {
       "name": "newrelic",
-      "version": "8.15.0",
+      "version": "8.7.0",
       "range": "^8.6.0",
       "licenses": "Apache-2.0",
       "repoUrl": "https://github.com/newrelic/node-newrelic",
-      "versionedRepoUrl": "https://github.com/newrelic/node-newrelic/tree/v8.15.0",
+      "versionedRepoUrl": "https://github.com/newrelic/node-newrelic/tree/v8.7.0",
       "licenseFile": "node_modules/newrelic/LICENSE",
-      "licenseUrl": "https://github.com/newrelic/node-newrelic/blob/v8.15.0/LICENSE",
+      "licenseUrl": "https://github.com/newrelic/node-newrelic/blob/v8.7.0/LICENSE",
       "licenseTextSource": "file",
       "publisher": "New Relic Node.js agent team",
       "email": "nodejs@newrelic.com"
@@ -196,15 +196,15 @@
       "licenseTextSource": "file",
       "publisher": "James Long"
     },
-    "tap@15.1.6": {
+    "tap@16.0.1": {
       "name": "tap",
-      "version": "15.1.6",
+      "version": "16.0.1",
       "range": "^16.0.1",
       "licenses": "ISC",
       "repoUrl": "https://github.com/tapjs/node-tap",
-      "versionedRepoUrl": "https://github.com/tapjs/node-tap/tree/v15.1.6",
+      "versionedRepoUrl": "https://github.com/tapjs/node-tap/tree/v16.0.1",
       "licenseFile": "node_modules/tap/LICENSE",
-      "licenseUrl": "https://github.com/tapjs/node-tap/blob/v15.1.6/LICENSE",
+      "licenseUrl": "https://github.com/tapjs/node-tap/blob/v16.0.1/LICENSE",
       "licenseTextSource": "file",
       "publisher": "Isaac Z. Schlueter",
       "email": "i@izs.me",
