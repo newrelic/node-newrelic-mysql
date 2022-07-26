@@ -5,7 +5,7 @@
   "tests": [
     {
       "engines": {
-        "node": ">=12.0"
+        "node": ">=14"
       },
       "dependencies": {
         "mysql2": ">=1.7.0"
