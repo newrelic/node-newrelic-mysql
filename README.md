@@ -115,5 +115,5 @@ New Relic MySQL instrumentation also uses source code from third-party libraries
 [4]: https://docs.newrelic.com/docs/agents/nodejs-agent/getting-started/compatibility-requirements-nodejs-agent
 [5]: https://img.shields.io/npm/v/@newrelic/mysql.svg
 [6]: https://www.npmjs.com/package/@newrelic/mysql
-[7]: https://codecov.io/gh/newrelic/node-newrelic-mysql/branch/master/graph/badge.svg?token=QUFKIFMGO5
+[7]: https://codecov.io/gh/newrelic/node-newrelic-mysql/branch/main/graph/badge.svg?token=QUFKIFMGO5
 [8]: https://codecov.io/gh/newrelic/node-newrelic-mysql
