@@ -1,6 +1,7 @@
-[![New Relic Experimental header](https://github.com/newrelic/opensource-website/raw/master/src/images/categories/Experimental.png)](https://opensource.newrelic.com/oss-category/#new-relic-experimental)
+[![New Relic Experimental header](https://github.com/newrelic/opensource-website/raw/main/src/images/categories/Experimental.png)](https://opensource.newrelic.com/oss-category/#new-relic-experimental)
 
-# New Relic MySQL instrumentation [![mysql instrumentation CI][1]][2]
+# New Relic MySQL instrumentation
+[![npm status badge][5]][6] [![mysql instrumentation CI][1]][2] [![codecov][7]][8]
 
 New Relic's offical MySQL instrumentation for use with the New Relic [Node.js
 agent](https://github.com/newrelic/node-newrelic).
@@ -112,3 +113,7 @@ New Relic MySQL instrumentation also uses source code from third-party libraries
 [2]: https://github.com/newrelic/node-newrelic-mysql/actions
 [3]: https://docs.newrelic.com/docs/agents/nodejs-agent/installation-configuration/install-nodejs-agent
 [4]: https://docs.newrelic.com/docs/agents/nodejs-agent/getting-started/compatibility-requirements-nodejs-agent
+[5]: https://img.shields.io/npm/v/@newrelic/mysql.svg
+[6]: https://www.npmjs.com/package/@newrelic/mysql
+[7]: https://codecov.io/gh/newrelic/node-newrelic-mysql/branch/master/graph/badge.svg?token=QUFKIFMGO5
+[8]: https://codecov.io/gh/newrelic/node-newrelic-mysql
