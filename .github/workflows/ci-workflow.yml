@@ -51,3 +51,10 @@ jobs:
     - name: Run Versioned Tests (npm v7+ / Node 16+)
       if: ${{ matrix.node-version != '14.x' }}
       run: npm run versioned:npm7
+    - name: Post Versioned Test Coverage
+      uses: codecov/codecov-action@v3
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        directory: ./coverage/versioned/
+        files: lcov.info
+        flags: versioned-tests-${{ matrix.node-version }}
