@@ -1,3 +1,7 @@
+### v6.1.0 (2022-11-09)
+
+* Updated instrumentation to store internal metadata in symbols instead of non-enumerable properties.
+
 ### v6.0.0 (2022-07-28)
 
 * **BREAKING** Removed support for Node 12.
