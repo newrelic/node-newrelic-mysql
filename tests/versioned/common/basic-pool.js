@@ -40,12 +40,8 @@ module.exports = (t, requireMySQL) => {
     t.autoend()
 
     const helper = utils.TestAgent.makeInstrumented()
+    setup.registerInstrumentation(helper)
 
-    helper.registerInstrumentation({
-      moduleName: 'mysql',
-      type: 'datastore',
-      onRequire: require('../../../lib/instrumentation').callbackInitialize
-    })
     const mysql = requireMySQL()
     const badConfig = {
       connectionLimit: 10,
@@ -95,11 +91,7 @@ module.exports = (t, requireMySQL) => {
     t.beforeEach(async () => {
       helper = utils.TestAgent.makeInstrumented()
       contextManager = helper.getContextManager()
-      helper.registerInstrumentation({
-        moduleName: 'mysql',
-        type: 'datastore',
-        onRequire: require('../../../lib/instrumentation').callbackInitialize
-      })
+      setup.registerInstrumentation(helper)
       mysql = requireMySQL()
       pool = mysql.createPool(config)
       await setup(mysql)
@@ -390,11 +382,7 @@ module.exports = (t, requireMySQL) => {
     t.beforeEach(async () => {
       helper = utils.TestAgent.makeInstrumented()
       contextManager = helper.getContextManager()
-      helper.registerInstrumentation({
-        moduleName: 'mysql',
-        type: 'datastore',
-        onRequire: require('../../../lib/instrumentation').callbackInitialize
-      })
+      setup.registerInstrumentation(helper)
       mysql = requireMySQL()
       await setup(mysql)
     })

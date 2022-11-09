@@ -7,12 +7,19 @@
 
 module.exports = exports = setup
 exports.pool = setupPool
+exports.registerInstrumentation = registerInstrumentation
+
 const params = (exports.params = {
   host: process.env.NR_NODE_TEST_MYSQL_HOST || 'localhost',
   port: process.env.NR_NODE_TEST_MYSQL_PORT || 3306,
   user: 'test_user',
   database: 'agent_integration_' + Math.floor(Math.random() * 1000)
 })
+const hooks = require('../../../nr-hooks')
+
+function registerInstrumentation(agent) {
+  hooks.forEach(agent.registerInstrumentation)
+}
 
 function executeDb(client, sql) {
   return new Promise((resolve, reject) => {
