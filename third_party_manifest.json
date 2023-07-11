@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "Mon Dec 12 2022 10:39:53 GMT-0500 (Eastern Standard Time)",
+  "lastUpdated": "Tue Jul 11 2023 14:28:32 GMT-0400 (Eastern Daylight Time)",
   "projectName": "New Relic MySql Instrumentation",
   "projectUrl": "https://github.com/newrelic/node-newrelic-mysql",
   "includeOptDeps": false,
@@ -198,15 +198,15 @@
       "email": "felix@debuggable.com",
       "url": "http://debuggable.com/"
     },
-    "newrelic@8.17.1": {
+    "newrelic@9.7.1": {
       "name": "newrelic",
-      "version": "8.17.1",
-      "range": "^8.6.0",
+      "version": "9.7.1",
+      "range": "^9.7.1",
       "licenses": "Apache-2.0",
       "repoUrl": "https://github.com/newrelic/node-newrelic",
-      "versionedRepoUrl": "https://github.com/newrelic/node-newrelic/tree/v8.17.1",
+      "versionedRepoUrl": "https://github.com/newrelic/node-newrelic/tree/v9.7.1",
       "licenseFile": "node_modules/newrelic/LICENSE",
-      "licenseUrl": "https://github.com/newrelic/node-newrelic/blob/v8.17.1/LICENSE",
+      "licenseUrl": "https://github.com/newrelic/node-newrelic/blob/v9.7.1/LICENSE",
       "licenseTextSource": "file",
       "publisher": "New Relic Node.js agent team",
       "email": "nodejs@newrelic.com"
